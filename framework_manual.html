@@ -1,0 +1,1011 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PX-42F App Manual</title>
+<style>
+:root {
+  --bg: #fbfaf7;
+  --fg: #1d1d1f;
+  --muted: #5d5d63;
+  --rule: #dcd9d2;
+  --panel: #f1efe9;
+  --accent: #2f5d8a;
+  --lcd-bg: #e9eae2;
+  --code-bg: #ecebe6;
+  --key: #2b2c30;
+  --key-fg: #f2f1ec;
+  --key-shift: #c98a2e;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17181a;
+    --fg: #e8e7e3;
+    --muted: #a3a29d;
+    --rule: #34353a;
+    --panel: #212226;
+    --accent: #8ab4dd;
+    --lcd-bg: #d9dbd1;
+    --code-bg: #26272b;
+    --key: #3a3b40;
+    --key-fg: #f2f1ec;
+    --key-shift: #e0a24a;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17181a;
+  --fg: #e8e7e3;
+  --muted: #a3a29d;
+  --rule: #34353a;
+  --panel: #212226;
+  --accent: #8ab4dd;
+  --lcd-bg: #d9dbd1;
+  --code-bg: #26272b;
+  --key: #3a3b40;
+  --key-fg: #f2f1ec;
+  --key-shift: #e0a24a;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+main { max-width: 900px; margin: 0 auto; padding: 32px 16px 80px; }
+header.cover { border-bottom: 2px solid var(--fg); padding-bottom: 20px; margin-bottom: 28px; }
+header.cover h1 { font-size: 2.1rem; line-height: 1.15; margin: 0 0 6px; letter-spacing: -0.01em; }
+header.cover p { margin: 0; color: var(--muted); }
+h2 { font-size: 1.45rem; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--rule); }
+h3 { font-size: 1.12rem; margin: 28px 0 8px; }
+h4 { font-size: 1rem; margin: 20px 0 6px; }
+p, ul, ol { margin: 0 0 14px; }
+li { margin: 4px 0; }
+a { color: var(--accent); }
+code, kbd, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; }
+code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+pre { background: var(--code-bg); padding: 12px 14px; border-radius: 6px; overflow-x: auto; margin: 0 0 16px; line-height: 1.45; font-size: 0.9rem; }
+pre code { background: none; padding: 0; }
+kbd {
+  display: inline-block; padding: 0 6px; border: 1px solid var(--rule); border-bottom-width: 2px;
+  border-radius: 4px; background: var(--panel); line-height: 1.5; white-space: nowrap;
+}
+nav.toc { background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 18px; margin-bottom: 8px; }
+nav.toc h2 { border: 0; margin: 0 0 6px; padding: 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+nav.toc ol { margin: 0; padding-left: 22px; columns: 2; column-gap: 32px; }
+@media (max-width: 560px) { nav.toc ol { columns: 1; } }
+.table-wrap { overflow-x: auto; margin: 0 0 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th, td { text-align: left; vertical-align: top; padding: 7px 10px; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; background: var(--panel); }
+td code { white-space: nowrap; }
+.note { border-left: 3px solid var(--accent); background: var(--panel); padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 0 0 16px; }
+.warn { border-left-color: var(--key-shift); }
+figure { margin: 8px 0 20px; }
+figcaption { color: var(--muted); font-size: 0.9rem; margin-top: 6px; }
+img.shot {
+  display: block; width: 100%; max-width: 500px; height: auto;
+  image-rendering: pixelated; image-rendering: crisp-edges;
+  border: 6px solid #3a3b3e; border-radius: 6px; background: var(--lcd-bg);
+}
+img.map { display: block; max-width: 100%; height: auto; image-rendering: pixelated; border: 1px solid var(--rule); background: #fff; }
+.shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px 18px; margin: 8px 0 18px; }
+.shots figure { margin: 0; }
+
+/* API reference: one block per function */
+.fn { border: 1px solid var(--rule); border-radius: 8px; margin: 0 0 16px; overflow: hidden; }
+.fn > pre { margin: 0; border-radius: 0; border-bottom: 1px solid var(--rule); font-weight: 600; }
+.fn > div { padding: 10px 14px 2px; }
+.fn dl { display: grid; grid-template-columns: max-content 1fr; gap: 2px 14px; margin: 0 0 12px; font-size: 0.95rem; }
+.fn dt { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.9em; color: var(--muted); }
+.fn dd { margin: 0; }
+@media (max-width: 560px) { .fn dl { grid-template-columns: 1fr; } .fn dd { margin-bottom: 6px; } }
+.fn pre { font-weight: 400; }
+
+/* the keyboard map */
+.kbd-map { display: grid; grid-template-columns: repeat(30, 1fr); gap: 6px; max-width: 560px; margin: 10px 0 8px; }
+.kbd-map .k {
+  background: var(--key); color: var(--key-fg); border-radius: 6px; padding: 6px 2px 4px;
+  text-align: center; line-height: 1.15; min-height: 52px;
+}
+.kbd-map .k b { display: block; font-size: 0.95rem; }
+.kbd-map .k span { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.72rem; opacity: 0.8; }
+.kbd-map .k i { display: block; font-style: normal; font-size: 0.62rem; color: var(--key-shift); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow-wrap: anywhere; }
+.kbd-map .s5 { grid-column: span 5; }
+.kbd-map .s6 { grid-column: span 6; }
+.kbd-map .on { outline: 2px solid var(--key-shift); }
+footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<main>
+
+<header class="cover">
+<h1>PX-42F App Manual</h1>
+<p>Writing native games and apps for the PX-42F calculator. Framework API version 3.</p>
+</header>
+
+<nav class="toc">
+<h2>Contents</h2>
+<ol>
+  <li><a href="#intro">What an app is</a></li>
+  <li><a href="#start">Quick start</a></li>
+  <li><a href="#first">Your first app</a></li>
+  <li><a href="#running">How an app runs</a></li>
+  <li><a href="#screen">The screen</a></li>
+  <li><a href="#fonts">Fonts and characters</a></li>
+  <li><a href="#keys">The keyboard</a></li>
+  <li><a href="#time">Time and random numbers</a></li>
+  <li><a href="#sound">Sound</a></li>
+  <li><a href="#files">Files on the drive</a></li>
+  <li><a href="#serial">The USB serial console</a></li>
+  <li><a href="#ir">Infrared</a></li>
+  <li><a href="#power">Power</a></li>
+  <li><a href="#decimal">Decimal numbers</a></li>
+  <li><a href="#recipes">Recipes</a></li>
+  <li><a href="#sim">The simulator</a></li>
+  <li><a href="#debug">Debugging</a></li>
+  <li><a href="#format">The .bin file and the build</a></li>
+  <li><a href="#errors">Messages when an app won't start</a></li>
+  <li><a href="#versions">Versions</a></li>
+  <li><a href="#summary">All functions at a glance</a></li>
+</ol>
+</nav>
+
+<!-- ============================================================ -->
+<h2 id="intro">1. What an app is</h2>
+
+<p>An app is a program for the PX-42F itself, written in C. It's a single <code>.bin</code> file on the calculator's drive, in <code>/BIN/GAMES</code> or <code>/BIN/APPS</code>, and it starts from <span class="mono">Settings &rarr; Games &amp; Apps</span>. While it runs it has the whole calculator: the screen, the keyboard, the speaker, the clock, the files on the drive, the USB serial port, the infrared LED and the battery.</p>
+
+<div class="shots">
+<figure><img class="shot" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAB6AQAAAAC+J3NIAAAPxUlEQVR4AQG6D0XwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8xgAMfP4AOAAAAPwAAABwAGAAAAAAAAAAAMHwAfHwAAD+xgAc/v4AfAAAAPwAAABwAGAAAAAAAAAAAcP4A/v4AADGbAA8xsAA7gAAADAAAAAwAGAAAAAAAAAAAcMYYxsYAADGbABsDsAAxtzcADB8xtwwfPB8AAAAAAAAAMA4Yzs4AAD+OP7MHPgAxv7+ADD+7v4wfvD+AAAAAAAAAMBwA3t4AAD8OP7+OPgA/ubmADDG/uYwBmDGAAAAAAAAAMDgA9vYAADAbAD+cMAA/ubmADD+1uYwfmD+AAAAAAAAAMHAY5uYAADAbAAM4MAAxv7+ADDAxv4wxmbAAAAAAAAAAMOAYxsYAADAxgAM/sAAxtzcADD+xtww/n7+AAAAAAAAA/P4A/v4AADAxgAM/sAAxsDAADB8xsAwdjx8AAAAAAAAA/P4AfHwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAPPz//n/P//////////////////////////////////AAPPz//n/P//8///////////////////////////////AAPPz//n/P//8///////////////////////////////AAPPz//n/P//8///////////////////////////////AAPPzgHn/P8D8///////////////////////////////AAPPzAHn/P4B8///////////////////////////////AAPACPnn/Px48///////////////////////////////AAPACfnn/Pz88///////////////////////////////AAPPyAHn/Pz88///////////////////////////////AAPPyAHn/Pz88///////////////////////////////AAPPyf/n/Pz88///////////////////////////////AAPPyf/n/Pz88///////////////////////////////AAPPyP/j/Hx4////////////////////////////////AAPPzAHgfA4B////////////////////////////////AAPPzgHwfg8D8///////////////////////////////AAP/////////8///////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAPP///n////////////////////////////////////AAPP///n/8//////////////////////////////////AAPP///n/8////n/////////////////////////////AAPP4OBD/8/gznn/0eDR4P//////////////////////AAPP4EBD/8zATn//wEBAQH//////////////////////AAPP/k/n/8nOQH//xE5ETn//////////////////////AAPP4GDn/8PAYHn/zk5OQH//////////////////////AAPPzn5mf8PP/nn/zk5OT///////////////////////AAPAQEBgf8nAYH//zkBOQH//////////////////////AAPAYkDw/8xg4P//zmDOYP//////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAPA////8////8D/5+f//////P/g4P/Of///////////AAPAf///4////8B/5+f/////+P/AQH/Of///////////AAPOf///4////85/5+f/////8P/OTn/Of///////////AAPOTlH/8////85gw8PgyM5/5P/MTH/Of///////////AAPATkB/8////8DgQ8PAQE5/zP/ISH/Of///////////AAPAzkR/8////8D+Z+fORkB/wH/CQn/Of///////////AAPJzk5/8////85gZ+fAT+B/wH/GRn/Of///////////AAPMzk5/8////85OZmZPz/5//PPOTn/k////////////AAPMQE5/wP///8BAYGBAT+B//PPAQH/x////////////AAPOYM5/wP///8DicPDgz+D//P/g4P/7////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/D///////////////////////////////////////AAP/D///////////////////////////////////////AAP/D///////////////////////////////////////AAP/D///////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAPBdBBD////////9////jd//f//f/3//3f/////////AAPfd3fdn///////9////ddn/f//f/3//3f/////////AAPfN3fdn/j/hjdDh////dNn/Djhb/jj/jDj/JjDd///AAPDV3DD//9/fdddd////dV//d9fX/3d/3dd/Vddd///AAPfZ3fXn/h/jdddd////dZn/dhfP/3d/3dB/VBdd///AAPfd3fbn/d/9dddd////ddn/ddfX/1d/1df/Vfdd///AAPBd3Bd//h/Djhdh////jd//Dhhb/7j/7dh/dhdh///AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AC6/UfTnmAX8AAAAASUVORK5CYII=" alt="The template app: Hello!, last key, run number, a bouncing dot"><figcaption>The template app, <code>HELLO.bin</code>.</figcaption></figure>
+<figure><img class="shot" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAB6AQAAAAC+J3NIAAAPxUlEQVR4AQG6D0XwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB8hjjG/gAAAAAAAAAAAAAB8AAAAAAB8AAD8AABgAHwAAD+xnzG/gAAAAAAAAAAAAAD+AAAAAAD+AAD+AABgAP4AADA5u7MwAAAAAAAAAAAAAADAAAAAAADGAADGAABgAMYAADA9sbMwAAAAAAAAAAAAAADAfHzcfADOAADGfH7wAM4AAD83sbw+AAAAAAAAAAAAAAD8/v7+/gDeAAD8/v7wAN4AAB+zv7w+AAAAAAAAAAAAAAB+wMbmxgD2AAD8xsBgAPYAAAGxv7MwAAAAAAAAAAAAAAAGwMbA/gDmAADG/nxgAOYAAAGxsbMwAAAAAAAAAAAAAAAGwMbAwADGAADGwAZmAMYAAD+xsbG/gAAAAAAAAAAAAAD+/v7A/gD+AAD+/v5+AP4AAB8xsbG/gAAAAAAAAAAAAAB8fHzAfAB8AAD8fPw8AHwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP////////////////////////9////////////////AAP////////////////////////4////////////////AAP////////////////////////wf///////////////AAP////////////////////////wf///////////////AAP////////////////////////4////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP////////////////////////////////8IQg/////AAP////////////////////////////////8IQg/////AAP////////////////////////////////8IQg/////AAP////////////////////////////////8IQg/////AAP///////////////////////////////////g/////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////A7frlhiH7GgoAAAAASUVORK5CYII=" alt="Snake: the snake and an apple, score and best in the status bar"><figcaption>Snake (PX-42F-Snake).</figcaption></figure>
+<figure><img class="shot" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAB6AQAAAAC+J3NIAAAPxUlEQVR4AQG6D0XwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB8AAAAcAAA/MYAAAAAAAAAAAAAAAAAAAAAA/AAAAAAAAD+AAAAcAAA/MYAAAAAAAAAAAAAAAAAAAAAA/gAAAAAAADAAAAAMAAAMMYAAAAAAAAAAAAAAAAAAAAAAxgAAAAAAADAfMbcMHwAMMYAAAAAAAAAAAAAAAAAAAAAAxnzGfNwAAD8fu7+MP4AMMYAAAAAAAAAAAAAAAAAAAAAA/v7G/v4AAB+Bv7mMMYAMMYAAAAAAAAAAAAAAAAAAAAAA/MbGxuYAAAGftbmMP4AMMYAAAAAAAAAAAAAAAAAAAAAAwMbW/sAAAAGxsb+MMAAMGwAAAAAAAAAAAAAAAAAAAAAAwMb+wMAAAD+/sbcMP4AMDgAAAAAAAAAAAAAAAAAAAAAAwP7u/sAAAB8dsbAMHwAMBAAAAAAAAAAAAAAAAAAAAAAAwHzGfMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////+B//////AAP/////////////////////////////////+A//////AAP/////////////////////////////////+c//////AAP/////////////////////////////////+cwZzBkfAAP/////////////////////////////////+AgJyAgPAAP/////////////////////////////////+BnJycjPAAP/////////////////////////////////+fnJSAn/AAP/////////////////////////////////+fnICfn/AAP/////////////////////////////////+fgIiAn/AAP/////////////////////////////////+fwZzBn/AAP/////////////////////////////////////////AAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVAAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVAAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAPwP///+f//////////////////////////85/5////AAPwP///+f//////////////////////////8R/5////AAP8////+f//////////////////////////8B/5////AAP89HIzkP//////////////////////////8pOQ+D//AAP88BATkP//////////////////////////85OQ8B//AAP88RGTmf//////////////////////////85OZ85//AAP885GTmf//////////////////////////85OZ8B//AAP885ATmZ//////////////////////////85OZk///AAPwM5IwGB//////////////////////////85AYEB//AAPwM5P4PD//////////////////////////85g8OD//AAP/////////////////////////////////////////AAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVAAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/+DP/////////////////////////////////////AAP/8BP/////////////////////////////////////AAP/8ZP8////////////////////////////////////AAP/8/I8////////////////////////////////////AAP/8/AQP///////////////////////////////////AAP/8/GQP///////////////////////////////////AAP/8/Oc////////////////////////////////////AAP/8ZOc////////////////////////////////////AAP/8BOf////////////////////////////////////AAP/+DOf////////////////////////////////////AAP/////////////////////////////////////////AAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVAAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/+DP/////////////////////////////////////AAP/8BP/////////////////////////////////////AAP/8ZP/////////////////////////////////////AAP/8/I/////////////////////////////////////AAP/8/AQH///////////////////////////////////AAP/8/GQH///////////////////////////////////AAP/8/Of////////////////////////////////////AAP/8ZOf////////////////////////////////////AAP/8BOf////////////////////////////////////AAP/+DOf////////////////////////////////////AAP/////////////////////////////////////////AAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVAAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////85/4////AAP/////////////////////////////////85/4////AAP/////////////////////////////////85/8////AAP/////////////////////////////////85g8////AAP/////////////////////////////////85Ac8B//AAP/////////////////////////////////85Oc8B//AAP/////////////////////////////////85Oc////AAP/////////////////////////////////+TOc////AAP//////////////////////////////////HAc////AAP//////////////////////////////////vg8////AAP/////////////////////////////////////////AAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVAAP/////////////////////////////////////////AAMAAAAAAAD/////////////////////////////////AAMAAAAAAAD/////////////////////////////////AAMAxgAAAAD/////////////////////////85/4////AAMA7gAAAAD/////////////////////////85/4////AAMA/gAAAAD/////////////////////////85/8/P//AAMA1ny4xgD/////////////////////////85g8/P//AAMAxv7+xgD/////////////////////////85Ac8D//AAMAxsbuxgD/////////////////////////85Oc8D//AAMAxv7GxgD/////////////////////////85Oc/P//AAMAxsDGxgD/////////////////////////+TOc/P//AAMAxv7G/gD//////////////////////////HAc////AAMAxnzGfAD//////////////////////////vg8////AAMAAAAAAAD/////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AMiOZlDZVjSYAAAAASUVORK5CYII=" alt="IR Remote: a map of the keyboard with each key's label"><figcaption>IR Remote (PX-42F-IR-Remote).</figcaption></figure>
+</div>
+
+<p>An app talks to the calculator only through one table of functions, <code>px</code>. Its definition is <code>px42f/px_app.h</code>, the contract between the firmware and every app. This manual explains each function in it. The rest of the template project is the build setup, a runtime, and a simulator that runs your app on your computer.</p>
+
+<!-- ============================================================ -->
+<h2 id="start">2. Quick start</h2>
+
+<h3>What you need</h3>
+<ul>
+  <li><strong>The ARM toolchain.</strong> Use the one the Raspberry Pi Pico extension for VS Code installs: <code>~/.pico-sdk/toolchain/15_2_Rel1</code>. Another location works with <code>make PICO_TOOLCHAIN=/path/to/toolchain</code>.</li>
+  <li><strong>For the simulator:</strong> <code>make</code>, <code>python3</code> and a C compiler for your computer (<code>cc</code>). On a Mac, they come with the Xcode Command Line Tools.</li>
+  <li><strong>Optional:</strong> VS Code with the C/C++ extension. Everything also works with <code>make</code> in a terminal.</li>
+</ul>
+
+<h3>Make a new app</h3>
+<ol>
+  <li>Copy the <code>PX-42F-App-Template</code> folder and give the copy your app's name, for example <code>PX-42F-Tetris</code>. Open it in VS Code.</li>
+  <li>In the <code>Makefile</code>, set two things:
+    <ul>
+      <li><code>NAME</code>: the file name, which is also the name in the menu. Use up to 28 letters, digits, <code>_</code> or <code>-</code>.</li>
+      <li><code>KIND</code>: <code>GAMES</code> or <code>APPS</code>, the folder it goes in.</li>
+    </ul>
+  </li>
+  <li>Write your app in <code>src/app.c</code>. You can add more <code>.c</code> and <code>.h</code> files in <code>src/</code>; they're all built.</li>
+  <li>Build it: <kbd>⇧⌘B</kbd> in VS Code, or <code>make</code>. The result is <code>build/NAME.bin</code>.</li>
+  <li>Try it on your computer: the <em>Simulate</em> task, or <code>make sim</code>. Screenshots are saved in <code>build/sim-out</code>.</li>
+  <li>Put it on the calculator:
+    <ol>
+      <li>On the calculator, open <span class="mono">Settings &rarr; USB Drive &rarr; Connect to Computer</span>.</li>
+      <li>Run the <em>Install on the PX-42F</em> task, or <code>make install</code>. It copies the file to <code>BIN/GAMES</code> or <code>BIN/APPS</code> on the drive named <code>PX-42F</code>.</li>
+      <li>Eject the drive on the computer, then press <kbd>EXIT</kbd> on the calculator.</li>
+    </ol>
+  </li>
+  <li>Start it: <span class="mono">Settings &rarr; Games &amp; Apps &rarr; Games</span> (or <em>Apps</em>), choose it, and press <kbd>ENTER</kbd>.</li>
+</ol>
+
+<h3>The project</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Path</th><th>What it is</th></tr></thead>
+<tbody>
+<tr><td><code>src/</code></td><td>Your app. The template has one file, <code>app.c</code>.</td></tr>
+<tr><td><code>px42f/px_app.h</code></td><td>The contract with the firmware: every function and constant. It's copied from the firmware; don't edit it.</td></tr>
+<tr><td><code>px42f/px.h</code></td><td>What your files include: <code>px_app.h</code>, <code>stdbool.h</code>, <code>stdint.h</code>, the table <code>px</code> and <code>app_main()</code>.</td></tr>
+<tr><td><code>px42f/runtime.c</code></td><td>The <code>.bin</code>'s header and entry, the memory <code>malloc()</code> uses, and <code>printf()</code> to the console.</td></tr>
+<tr><td><code>px42f/app.ld</code></td><td>The linker script: places the app at <code>0x20060000</code>, where the calculator loads it.</td></tr>
+<tr><td><code>px42f/pxbin.py</code></td><td>Turns the linked program into the <code>.bin</code>: fills in its size and checksum.</td></tr>
+<tr><td><code>sim/</code></td><td>The simulator (<code>sim.c</code>), the calculator's fonts and PNG writer, and <code>drive/</code>, the simulated drive.</td></tr>
+<tr><td><code>Makefile</code></td><td><code>NAME</code>, <code>KIND</code>, <code>SIM_SCRIPT</code>, and the targets <code>all</code>, <code>sim</code>, <code>install</code> and <code>clean</code>.</td></tr>
+<tr><td><code>.vscode/</code></td><td>The VS Code tasks (Build, Simulate, Install on the PX-42F, Clean) and IntelliSense set up for the ARM compiler.</td></tr>
+</tbody>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="first">3. Your first app</h2>
+
+<p>Every app includes <code>px.h</code> and defines <code>app_main()</code>. The firmware calls it with the table <code>px</code> already set. This app shows a greeting and waits until you leave:</p>
+
+<pre><code>#include "px.h"
+
+int app_main(void) {
+    px->clear();                                        /* a white screen */
+    px->text(4, 4, "Hello, PX-42F!", PX_FONT_LARGE, 0); /* black text at (4, 4) */
+    px->show();                                         /* send it to the panel */
+
+    while (px->key(-1) != PX_KEY_QUIT)                  /* wait, asleep, for ON */
+        ;
+    return PX_EXIT_MENU;                                /* back to the menu */
+}</code></pre>
+
+<p>Three things to notice:</p>
+<ul>
+  <li><strong>Drawing happens in memory.</strong> Nothing reaches the panel until <code>px-&gt;show()</code>.</li>
+  <li><strong><code>px-&gt;key(-1)</code> waits for the next key, asleep.</strong> It returns <code>PX_KEY_QUIT</code> when you press <kbd>ON</kbd>, and the app must then return.</li>
+  <li><strong>The return value says where to go.</strong> <code>PX_EXIT_MENU</code> goes back to the list; <code>PX_EXIT_OFF</code> turns the calculator off.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="running">4. How an app runs</h2>
+
+<h3>Starting</h3>
+<p>When you choose an app, the calculator:</p>
+<ol>
+  <li>Reads the whole <code>.bin</code> and checks its header and checksum. A file that fails gets a message (<a href="#errors">section 19</a>) and nothing else happens.</li>
+  <li>Saves the calculator's memory (the Plus42 stack, registers and programs) to the drive.</li>
+  <li>Copies the app into RAM at <code>0x20060000</code>, sets its variables to zero, and calls <code>app_main()</code> on processor core 1.</li>
+</ol>
+<p>When the app returns, the calculator takes its memory back and goes to the menu, or turns off.</p>
+
+<h3>Rules every app follows</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Rule</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td><strong>Wait in <code>px-&gt;key()</code> or <code>px-&gt;sleep()</code></strong>, never in a busy loop.</td><td>The calculator sleeps while waiting there, which keeps the battery current low. And if 100 ms pass without any call into <code>px</code>, the watchdog restarts the calculator, assuming the app has hung.</td></tr>
+<tr><td><strong>Return when <code>px-&gt;key()</code> gives <code>PX_KEY_QUIT</code>.</strong></td><td>That's <kbd>ON</kbd>, the Sleep Timer running out, or an empty battery. After a quit, every further call to <code>px-&gt;key()</code> returns <code>PX_KEY_QUIT</code> straight away. An app with a way out of its own can take <kbd>ON</kbd> as an ordinary key instead: <code>on_key()</code>, below.</td></tr>
+<tr><td><strong>Keep within 128 KB.</strong></td><td>Code, constants, variables and the <code>malloc()</code> heap share 128 KB of RAM. <code>make</code> prints how much is left for the heap.</td></tr>
+<tr><td><strong>Keep big arrays <code>static</code>.</strong></td><td>The stack is the firmware's: 32 KB, part of it already in use. A large local array can overflow it.</td></tr>
+<tr><td><strong>Save to files rarely.</strong></td><td>Files are in flash memory, which wears out with writing. Save a high score at the end of a game, not every frame.</td></tr>
+</tbody>
+</table></div>
+
+<h3>If an app crashes</h3>
+<p>The calculator's memory was saved to the drive before the app started, so nothing is lost. A crash or a hang restarts the calculator. The start screen then shows where it stopped: see <a href="#debug">Debugging</a>.</p>
+
+<h3>Speed and battery</h3>
+<p>The processor runs at 150 MHz while the app works and at 48 MHz while it waits in <code>px-&gt;key()</code> or <code>px-&gt;sleep()</code>, asleep between keys and timeouts. A game that waits there for each frame uses little more than the calculator idling. A loop that never waits uses about six times as much, and trips the watchdog anyway.</p>
+
+<!-- ============================================================ -->
+<h2 id="screen">5. The screen</h2>
+
+<p>The screen is 250 &times; 122 pixels, black and white. <code>(0, 0)</code> is the top-left corner, x goes right and y goes down. Everything you draw goes into a picture in memory; <code>px-&gt;show()</code> sends it to the panel. Draw a whole frame, then show it once.</p>
+
+<figure><img class="shot" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAB6AQAAAAC+J3NIAAAPxUlEQVR4AQG6D0XwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAABgOAAAAAD8xgD+fIb8AHzGOMDAAAAw4AAAAAAAAABgAABgcAAAAAD+xgD+/sb8AP7ufMDAAABwcAAAAAAAAABgAABg4AAAAADGbADAxuYwAMD+7sDAAABwOAAAAAAAAADwfMbwwAAAAADGbADAxvYwAMDWxsDAAAAwGAAAAAAAAADw/u7wwAAAAAD+OAD4xt4wAPzGxsDAAAAwGAAAAAAAAABgxmxgwAAAAAD8OAD4xs4wAH7G/sDAAAAwGAAAAAAAAABg/jhgwAAAMADAbADAxsYwAAbG/sDAMAAwGAAAAAAAAABmwGxm4DAwMADAbADAxsYwAAbGxsDAMAAwOAAAAAAAAAB+/u5+cDAwEADAxv7A/sYw/v7Gxv7+EAD8cAAAAAAAAAA8fMY8OAAAIADAxv7AfMYw/nzGxv7+IAD84AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAM///////////z+D//+fwP////////5////////////AAM///////////j8B//8fgH/8Af////5////////////AAM///////////D44//4fHn/8Af////z////////////AAM/8B//4B////D58//4fP//8//////z////////////AAM/8A8AwBwD//z58z8+fP//+f/////zPz//////////AAM//84Aj5gD//z54z8+fP///P/P///nPz//////////AAM//+R8n5Hz//z5w55+fAf//n/P///nnn//////////AAM//+T/n5Pz//z5g8z+fAP//z/P//nnzP//////////AAM/+AT/j5AD//z5E+3+fPH//z4B//zP7f//////////AAM/8AT/wBAD//z4M+H+fPn//n4B//zP4f//////////AAM/4+T/4BP///z4c8z+fPn//P/P//5PzP//////////AAM/5+T//xP///z4897+fPn/+f/P//4f3v//////////AAMf4+T//5H///z5855+fPn/8//P//8fnn//////////AAOAMAT//xgD//z44z8+fHH/8Af///8fPz//////////AAPAOCT/wDwD/+AcBz8wDgP/8Af///+fPz//////////AAP/////wH///+AeD//wDwf/////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAOD//+Pj/+D/8+D////PzP/h//P////////////////AAMB//+Pj/8B/48B////jzP/M//P////////////////AAM////Pz/85/4855///4zP/M//P99//////////////AAM/OYPPz/85Oc/x5/85+TP/h//P85//////////////AAMDEYHPz/+DEc/j//8R44f////PAQH/////////////AAOBAfnPz/+Dk8/H//+Tj4f///9LAQH/////////////AAP5KYHPz/85x8+P5//HP8////8D85//////////////AAP5OTnPz/85k88f5/+T/8////+H99//////////////AAMBOQHPz/8BEQMB//8RAc/////P////////////////AAODOYnPz/+DOQMB//85Ac//////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAN3f/f/P+P//f///v/3/////eP//f8H+P//////////AAMn///+/92f+f3//X/3////+t3/+f98N3//////////AANWcOf9912f/ft3/f+F3/8FF33//f8N/3//////////AANXd3f8OuP//fev/f92v/+s//P//f/0eP//////////AAN3d3f93d2f/e/f/f93f/+t/+///f/1/3//////////AAN3d3f92t2f/d+v9f92v/+t/9///ed0N3//////////AAN2N2P+N2P/+P93+/+F3/+t/8H/+OeP+P//////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAMAAAAAAAAAAAAAAAAAAAH/////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAN/////////////////////////////////////////AAO/////////////////////////////////////////AAPP//////////AAAAAAD////8AAAAAAAAA/////////AAP3//////////AAAAAAD////8wAAAAAAAA/////////AAP7//////////AAAAAAD/5Pk8wAAAAAAAA/////////AAP9//////////AAAAAAD/wHAcAAAAAAAAA/////////AAP+//////////AAAAAAD/wHAdwuMZ83H58/////////AAP/P/////////AAAAAAD/wHAdw/sb+/v7+/////////AAP/3/////////A////8D/4Pg8w7sbG5sDG/////////AAP/7/////////A////8D/8fx8wxsb+wHz+/////////AAP/9/////////A////8D/+/78wxmzAwAbA/////////AAP/+/////////A////8D////8wxjj+wP7+/////////AAP//P////////A////8D////8wxhB8wPx8/////////AAP//3////////A////8D////8AAAAAAAAA/////////AAP//7////////A////8D///////////////////////AAP//9////////A////8D///////////////////////AAP//+////////AAAAAAD///////////////////////AAP///P///////AAAAAAD///////////////////////AAP///3///////AAAAAAD///////////////////////AAP///7///////AAAAAAD//////j//P/////////////AAP///9///////AAAAAAD//////j//P/////////////AAP///+///////AAAAAAD//////z////////////////AAP////P/////////////////8jz4OPR////////////AAP////3/////////////////8Bz4GPAf///////////AAP////7/////////////////8Zz/nPEf///////////AAP////9/////////////////8Zz4HPOf///////////AAP////+f////////////////8BzznPOf///////////AAP/////v////////////////8jzwHPOf///////////AAP/////3/////VVVVVVX////8/z4nPOf///////////AAP/////7///////////////////////////////////AAP/////9///////////////////////////////////AAP/////+f//////////////////////////////////AAP//////v//////////////////////////////////AAP//////3//////////////////////////////////AAP//////7////n3///73nn/f33/////3//n////////AAP//////9////3////1/33/f/3////////3////////AAP//////+f///3nDj/3n33/DnjJjD/Dndj3////////AAP///////v///33dd/j333/d33V9d/d3rd3////////AAP///////3///33dB/3333/d33Vhd/d33B3////////AAP///////7///33df/3333/d31VdD/D3rf3////////AAP///////9///jjdh/3jjj/Dj7dhf/fjdhj////////AAP///////+f/////////////////f/f////////////AAP////////v////////////////////////////////AAP////////3////////////////////////////////AAP////////7////////////////////////////////AAP////////9////////////////////////////////AAP////////+f///////////////////////////////AAP/////////v///////////////////////////////AAP/////////3///////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AAP/////////////////////////////////////////AJqhKiZB1AxkAAAAASUVORK5CYII=" alt="Text in the three fonts, inverse text, a line, filled rectangles, two bitmaps and dotted pixels"><figcaption>Text in the three fonts (with HP-42S symbols), lines, filled rectangles, bitmaps, pixels and inverse text.</figcaption></figure>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Constant</th><th>Value</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>PX_SCREEN_W</code></td><td>250</td><td>Width in pixels.</td></tr>
+<tr><td><code>PX_SCREEN_H</code></td><td>122</td><td>Height in pixels.</td></tr>
+<tr><td><code>PX_SCREEN_STRIDE</code></td><td>32</td><td>Bytes in a row of <code>px-&gt;screen</code>.</td></tr>
+</tbody>
+</table></div>
+
+<p>Every drawing function leaves out whatever falls off the screen, so you can draw at any coordinates.</p>
+
+<div class="fn"><pre>void show(void);</pre><div>
+<p>Sends the picture to the panel. It takes about 10 ms. Nothing you draw appears until you call it.</p>
+</div></div>
+
+<div class="fn"><pre>void clear(void);</pre><div>
+<p>Makes the whole picture white.</p>
+</div></div>
+
+<div class="fn"><pre>void pixel(int x, int y, int black);</pre><div>
+<p>Sets one pixel: black if <code>black</code> isn't 0, white if it is.</p>
+</div></div>
+
+<div class="fn"><pre>int get_pixel(int x, int y);</pre><div>
+<p>Returns 1 if the pixel is black, 0 if it's white or off the screen. Useful for collision tests against what's drawn.</p>
+</div></div>
+
+<div class="fn"><pre>void fill(int x, int y, int w, int h, int black);</pre><div>
+<p>Fills a <code>w</code> &times; <code>h</code> rectangle whose top-left corner is <code>(x, y)</code>, black or white. A white fill erases. For a frame, fill black, then fill a smaller white rectangle inside it.</p>
+<pre><code>px->fill(0, 0, PX_SCREEN_W, 12, 1);   /* a black title bar */
+px->fill(40, 30, 50, 20, 1);          /* a box with a 2-pixel border */
+px->fill(42, 32, 46, 16, 0);</code></pre>
+</div></div>
+
+<div class="fn"><pre>void line(int x0, int y0, int x1, int y1, int black);</pre><div>
+<p>Draws a 1-pixel line from <code>(x0, y0)</code> to <code>(x1, y1)</code>, both ends included.</p>
+</div></div>
+
+<div class="fn"><pre>void bitmap(int x, int y, int w, int h, const uint8_t *bits, int stride);</pre><div>
+<p>Draws a 1-bit picture with its top-left corner at <code>(x, y)</code>. The picture's 1 bits become black pixels. Its 0 bits leave the screen as it is, so a sprite's background is transparent: clear the area first for a solid one.</p>
+<dl>
+<dt>bits</dt><dd><code>h</code> rows of <code>stride</code> bytes each. In each byte the top bit is the leftmost pixel.</dd>
+<dt>stride</dt><dd>Bytes per row: at least <code>(w + 7) / 8</code>.</dd>
+</dl>
+<pre><code>/* An apple, 5 x 5: one byte a row, the pixels in the top 5 bits. */
+static const uint8_t apple[5] = {0x20, 0x70, 0xF8, 0xF8, 0x70};
+px->bitmap(100, 50, 5, 5, apple, 1);</code></pre>
+</div></div>
+
+<div class="fn"><pre>int text(int x, int y, const char *s, int font, int inverse);</pre><div>
+<p>Draws the text <code>s</code> with its top-left corner at <code>(x, y)</code>, in one of the six fonts (<a href="#fonts">next section</a>). Each character fills its whole cell: with <code>inverse</code> 0 it's black on white, otherwise white on black. So text draws over whatever was there, without clearing first.</p>
+<dl>
+<dt>returns</dt><dd>The x just after the text, to continue on the same line.</dd>
+</dl>
+<pre><code>int x = px->text(2, 20, "Score: ", PX_FONT_SMALL, 0);
+px->text(x, 20, "42", PX_FONT_SMALL, 1);           /* the number inverted */</code></pre>
+</div></div>
+
+<div class="fn"><pre>int text_width(const char *s, int font);
+int font_height(int font);</pre><div>
+<p>The width <code>text()</code> would take for <code>s</code>, and a font's height. The fonts are monospaced, so the width is the character count times the font's advance. Use them to centre or right-align:</p>
+<pre><code>const char *t = "GAME OVER";
+px->text((PX_SCREEN_W - px->text_width(t, PX_FONT_LARGE)) / 2, 50, t, PX_FONT_LARGE, 0);</code></pre>
+</div></div>
+
+<div class="fn"><pre>uint8_t *screen;</pre><div>
+<p>The picture itself, for drawing faster than pixel by pixel: <code>PX_SCREEN_H</code> rows of <code>PX_SCREEN_STRIDE</code> bytes, 1 bit a pixel, 1 = black. In each byte the top bit is the leftmost pixel. Bits past x = 249 in each row are ignored.</p>
+<pre><code>/* Invert the whole screen. */
+for (int i = 0; i &lt; PX_SCREEN_H * PX_SCREEN_STRIDE; i++)
+    px->screen[i] ^= 0xFF;
+px->show();</code></pre>
+</div></div>
+
+<!-- ============================================================ -->
+<h2 id="fonts">6. Fonts and characters</h2>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Font</th><th>Character cell</th><th>Advance</th><th>Characters a line</th></tr></thead>
+<tbody>
+<tr><td><code>PX_FONT_LARGE</code></td><td>10 &times; 16</td><td>11 pixels</td><td>22</td></tr>
+<tr><td><code>PX_FONT_SMALL</code></td><td>8 &times; 12</td><td>8 pixels</td><td>31</td></tr>
+<tr><td><code>PX_FONT_MINI</code></td><td>6 &times; 8</td><td>6 pixels</td><td>41</td></tr>
+<tr><td><code>PX_FONT_CHOSEN_LARGE</code>, <code>_SMALL</code>, <code>_MINI</code></td><td colspan="3">The same sizes, in the fonts chosen in <span class="mono">Settings &rarr; Fonts</span>: the calculator screen's own fonts, which may be fonts the owner made. Use them to match the calculator's look.</td></tr>
+</tbody>
+</table></div>
+
+<p>The built-in fonts are always the same, so a layout drawn with them looks as you designed it on every calculator.</p>
+
+<h3>Character codes</h3>
+<p>Codes 32&ndash;126 are ASCII, except 94, which is &uarr; (the HP-42S has no ^ there; ^ is code 30). Codes 0&ndash;31 and 127 are the HP-42S's symbols. Write them in C strings as <code>\x</code> escapes:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Code</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr></thead>
+<tbody>
+<tr><th>0x00</th><td>&divide;</td><td>&times;</td><td>&radic;</td><td>&int;</td><td>&#9618;</td><td>&Sigma;</td><td>&#9654;</td><td>&pi;</td><td>&iquest;</td><td>&le;</td><td>LF</td><td>&ge;</td><td>&ne;</td><td>&crarr;</td><td>&darr;</td><td>&rarr;</td></tr>
+<tr><th>0x10</th><td>&larr;</td><td>&micro;</td><td>&pound;</td><td>&deg;</td><td>&Aring;</td><td>&Ntilde;</td><td>&Auml;</td><td>&#8737;</td><td>&#7431;</td><td>&AElig;</td><td>&hellip;</td><td>Esc</td><td>&Ouml;</td><td>&Uuml;</td><td>^</td><td>&bull;</td></tr>
+<tr><th>0x7F</th><td colspan="16">&#8866; (the HP-42S's append sign)</td></tr>
+</tbody>
+</table></div>
+
+<div class="note warn"><strong>A C trap.</strong> <code>"\x05A"</code> is one character, code 0x5A, because a <code>\x</code> escape takes every hex digit that follows it. End the string and start a new one after the escape: <code>"\x05" "A"</code>. C joins the two pieces into one string.</div>
+
+<pre><code>px->text(2, 2, "\x05+ turns left", PX_FONT_SMALL, 0);   /* Σ+ turns left  ("+" isn't a hex digit) */
+px->text(2, 16, "20\x13" "C", PX_FONT_SMALL, 0);        /* 20°C */
+px->text(2, 30, "\x07r\x1e" "2", PX_FONT_SMALL, 0);     /* πr^2 */</code></pre>
+
+<h3>The font maps</h3>
+<p>Every character of the built-in fonts. A character's code is its row (00 to 70, in hexadecimal) plus its column (0 to F).</p>
+<figure><img class="map" src="data:image/png;base64,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" alt="Map of the large font, 10 by 16"><figcaption><code>PX_FONT_LARGE</code>, 10 &times; 16.</figcaption></figure>
+<figure><img class="map" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnkAAAGbCAAAAACdBtlpAAAPYklEQVR42u3da7LiOBIG0Lv/pczWWERPxEx0FdcYK6VM2TIc/6jo6P4asDgUQo/Uzz8u1xXXjyZwkeciz+W6g7yfP1crlX+c2HO1nu/n1xVJ1TxORRvGHiX3XH2PMtQ+5JF3W3k9rZ99nNhztZ+v6rnOzPSJqXs95JFH3rtvtby81uPEnuvvHY9/88cykXTVff17R613Ovo4kdcTe66hNiSPvNvLi/RI49/e2d8P8V8YFfIqNJyfqfpbgDzyvlFe7Fd4jbuYmMrece411/XWY9+klT2NyHMN3Tl55N1aXvv7LX7H2VR85CX+LrZbNzZelBkDrhwNIY888rLyYiMdFe6qxFSO4ORHnWru6/t+YZBH3nWjKhXvUMRmj+Oalp0v7+zMN81hkEferF8YF89Ad8ureq6zVkL0jqqssmKAPPI+TV7vSGluNKRmZWj1as1s+0TbsGIk+eyVoeSR93nyXK7+v640gete8v7jcmWucXkyMpkMeTLkyZCn1WTIkyFv59Efby4ZmUaGPBnyZMi7VN6fqcBm5vVx/v8vX//cZF6v2a3//IKPH2f39Wz+993HiWQizxXPvD4jeeSRRx55U+XFWzYoL/Iu7rbIK7sBeQPvYl7e84sZez2bRyCPPPL25W3X90XWBZJH3uryNv9puA/3HDjo6wT7eZF+VaplezLN5+r6JBwIfv6vwT5uibwdGz+vq5pjq9LJI4888u4r7++3bHSH80DLdvXhxuRF+nm7TdbsC471FyPvUHzE5BXogJj4a66Vt21D8si7XN62FlnXty155J0qr7f1gyMLw/Ii/by4hsjIS15evJ/X1YaZT/jzf01+ot62z89rtdlY9VnyyCOPvPvK2zd3nrzdjuC8fl6JvGD/NT46ExfT7MNl5lSCn7rXySTyyLuVvN+jKu3qs+SRd6W8wlGVrn5Msp9XMqoSua9dCplZ/PhcUbNPmem/BtvnHiPJ5JFHHnmnyVtjxUC8j5Lp5xWuGAjK61oPF+wLDj9OV/81+Di3X6tC3nfJW2dlKHnkXbMavjnSEc8k95519Zki/bySuZD8aEhQ1evH+8N3AJFHHnnk3URe1R6t4Dud7+eV7PSOzKwXrvM7U97095Q88sgjj7xV5cl8ToY8GfJkyAvLk5EZzJAnQ54MeVpNhjwZ8rSazAryXC7n28r4tpWRIU+GPBkZ8mQ+Qt6as9TxPWPHtVfM9FurQh555Ml8nrxgHZNmvcu3u4v/9+fr+vXhWjCT7n1sdX7V7vRHZ0V18sgjjzzybiSvuY9rN1C/A3k0U7KHLbNbfndr+jmfFvLIu52839V7Bir6kEfeBfJKdg4H63jG5VVVVQtW6RruC+4O8WT6eZF2jp/inKlO3pT3W1l/5UbyyCOPvHvL2/sOfiOvS0zkToKtNjxqsHmEfMt21TqZKq9r5CVYwW040/j0kkfehfJ+G+s835Y88i6QV3snqV/pQ89V1bKPcMW0MQ1VcxhVql6Vd1dweyuv7pRR8sgjj7zV5VWeMrqmvMfh2RJjfdOxSt+FNUw3L3h2Hy44UkYeebeQFxtVIY+8a+SdPKpSPmqQP+/wuK8T+URVjapE1sydLG9wVIU88sgj7xPlbdcHVK8YWFlesN9ZqPPb5B2tGCCPvDXkVa8MJY+8WfKqNFSN45eM0U/SGVl3eDBnsPmHsVGVc96L63cAkUceeeR9t7zZs+bnyKu991p5mdXwwQx55JFHHnkLyku9SpnPy5AnQ553iLywPBmZwQx5MuTJkKfVZMiTIU+ryTjf1uV8WxkZ37Yy5MnIkCdDnoxMkTwz4jLrrlWRkSFP5vvk5WtZPorOIIzUQ3nEqoHv3tq7e29W8f54eb/amTzyyCOPvDvLKzldKbJnLCgvftrx+edTnpnZtjN55F0ob25FH/LIu7e8GTVB4ruvj1s234dr9gWDO73XFLxfoXtbqbG/ciN55JFH3r3k/f2W7a7QvaC841GViJjX97hqBCfTX9z8eS95O3MY5JF3jbx/r+2ZU/f9tiWPvOIWiZ+anB8NKXnNhfLicyHJ6mPlNUMPT2J5PXPq3F8Y5JFHHnlnytsbRz7zF0aVvNc5jOHRh9cnulBeVTXw8+W9bWfyyLtQ3u/v1c5TRskj78PldbXIxs3u6wmKeR7IWLmfF2/nM0de3rbzz+voyRUjyeSRRx5558qbvWIgnylcMdB1GnRJnym5YqB2DqNKXnDdIXnkLS5vzspQ8si7Rt5VoypVqxOSrzm5Gr7w9KnmKodJq0AOVgxcuQOIPPLII4+8aTu9N0vHIju98+P46+z0Pue5dtmRRx555JE3VZ6MDHky5MmQNyZPRmYwQ54MeTLkaTUZ8mTI02oyzrd1Od9WRsa3rQx5MjLkyZAnI1Mkz4y4jLUqMuRpWZkT5AX3aMX3X2X2le0uc8/sBq/aVV54XzeSd3Rf5JFHHnnkheX1tv7xruDCk6WaO73zz3VmZoaYkh3sx3vPju6LPPIulDd+yih55F0pL75rOliD4/hkqePnet2k/eiv49lV6zP5muP39YhVDM9nSqqcN+4rWbmRPPLII++O8v5+y/ZV6H6trZk/8TfY12nWA82cUNUrr3n25FLyeke4kq+HPPIWk/f36j9llDzyLpaXP+2pORoSHzHJz2EMnBmZrGF62qhKecW0wfZJnjJKHnnkkfcJ8qKnjL4W1szIi5yulJ+fiI+GxEcW4iMUyX5VUszAaNHwiFKjfcgj72J52+/ZnlEV8si7TF7wFUR+yefnDKrkxVs2MzcTfxcL5ye61tUdv+bBdZklI8nkkUceefeSN3nFQPAdip+/GHkX86dPnSPvS+YwyCNvGXknrAwlj7wp8vLzATNWjZ/zXCev8o/PK+TX8DWfK3WK8wk7gMgjjzzyPkXe2Ix41e7r4Znswt3X5+9gj6y6WGHvGXnkkUceeaqYyVycIU+GPBnywvJkZAYz5MmQJ0OeVpMhT4Y8rSbjfFuX821lZHzbypAnI0OeDHkyMkXyzIjLWKsiQ56WlTlHXqT62HEmWKOzd1X97P1gvZW+M/VJg6+5a1d5Znd6pBbMxLMeySOPPPK+TN7mVZaIKTw38cznymhYTd6m8HrJff0Unm9LHnl5eSMVfcgj7xp5z9VCn/9h6p0EWzb4XJG+TlWm8HSu4+fKnKrV9akbr852cCpBsHIjeeSRR97t5D0766zQ/Ufb85/J/sfsEQHyIq/54IyTyDko5JG3rrzfpxH8/tYlj7zPl9c1H5CU1zXPkZSXrz0al9dVMTz/6R0f5XkjruOUUfLII4+828nbO4ml9hdG1dzDmvJmV/peVt74SBl55C0mr3pUhTzy1pV331GVzH0tO6pSOwoWWDEwZySZPPLII29deYMrBn5mnq24+IqBqfJ6VZFHHnlxeYmVoeSRd7a82pGORVbDV61jq5q/mbHPbfYKj1k7gMgjjzzyvknetbudZ+/0btYNuereT/iEl/Rfp+/0Jo888sj7GnmqdMmMZMiTIU+GvLA8GZnBDHky5MmQp9VkyJMhT6vJON/W5XxbGRnftjLkyciQJ0OejEyRPDPiMtaqyJCnZWVmy5u0in3q45y0k3kok9kvF2yfiJjIe9FVC4Y88sgjj7xaeWfu4i6pPfpt8kr21EX2wpFH3qryXquWdVX0IY+8y+Rd8i4e3G1Xlepzdjsnq49tbrn5XE1VwdGQZL+8U15n5UbyyCOPvNvJezbVWaGbvJPlNftekfbJy9vcGnnk3Uve9vfF3xYhj7x15c2omzlc7Ws1eY/ftcKTIxSRx0l+MoPKC+Yw9n5hdJwySh555JF3K3nb3xZbg9kVA5veQGHN0PzZEiXyDu6rVl7znY6PmATnHsgj73vk9YyqkEfeNfKORzo2wwrNdzE4A72IvOAsfv5dnDE/scAvjK28wZFk8sgjj7xbyCtaMdB8pyMjL8lZ8xJ58bmHzYdqkryudXXJ+QnyyPt0ea8rQYdXhpJH3nLy4vMcmdXw8Xcx/jj5056qPi351fBd6/xK5opmnfVIHnnkkUfenDMRC3cgx9+h45Z9fSPvJW/3NZNHHnnkkbeavMYvZxmZ0IoB8mTIkyHvSJ6MzGCGPBnyZMjTajLkyZCn1WScb+tyvq2MjG9bGfJkZMiTIU9GpkieGXEZa1VkyNOyMiece1byKuPVt7syB6vPI4+TOu+h876q6njGdyaQRx555JF3r9PkP1JecDf4OvJ69wGSR973yis7ZZQ88k6S9+isnHU7ecnHmXRfpymfKy9TuZE88sgj747ynk31VOgO3kmwrkrveRjNfkym/ki8InbwLJDgaz5+F+O1aYblBauzPTrP+di+ZvLIW05e8NuWPPIuk/c4rPYVGaEYO+vxtMzBO5R/rhnySqqPPXL1W9tVzPZPVg7/wiCPPPLIu6283lNGq0Y6BqpdJzVEnquqQndkdKZwDiN5ZmSXqkfsjJOdeyePvEvlPf+26DlllDzylpZXqKFrHL/kjMbZ91UrL/I4wVGV5knYqb9NkqeMkkceeeTdUV5ixUDvTPYi8rpWDEztv/bOK5wmr/b9Io+8ZeRlThklj7zV5d1rDmO1fl5kRUXtqEqVvCtPnyKPPPLI+yZ5kTVzM9bnJc9ErF2flx9V6ZpTiZwYPVtee30eeeSRRx55pfJkZHZ3epMnQ54MeRF5MjKDGfJkyJMhT6vJkCdDnlaTcb6ty/m2MjK+bWXIk5EhT4Y8GZkieWbEb5pprpi3VkWGPPLII69wh/ZHZprnQSb3pw3s8CePPPLII4+8b+vDVWXII++G8l6rltVW9CGPPPLIW1ledeVG8sgjj7w1f2H0V+geOMvwuE5HsmZKpG7mSTUxJ2Sa9WLOlNf8hJNH3urytmdORb5tySPvSnlr1gNdR17qlKZOeV1nRg7Phby283jN0LFTRskjjzzy7ihv70yC+C+M47MMI7Usex8nM6pyprznfx95F5t9uEfu1ORCeZs3lDzy7ifv3fcueeR9urygqmRl7XJ5B6NFr3c9NloUfJxL5jCC1cnfjKps5fWNJJNHHnnk3VtedMVA7WhI16x55NSoFfpnzccZuK8PWjFAHnnXy+tZGUoeeVfKK1wx0LyT3pOl8vMBx6c9ReYnjjO1r/lbdgCRRx555H2lvGT/bEze8Th+8szI54nwqaMzj/CZkVXzHI8P2OlNHnnkkfdN8j5+H9c370+b+3rII488GfLC8mRkBjPkyZAnQ55WkyFPhjytJuN8W9fdr/8CZcFOY6L+eVcAAAAASUVORK5CYII=" alt="Map of the small font, 8 by 12"><figcaption><code>PX_FONT_SMALL</code>, 8 &times; 12.</figcaption></figure>
+<figure><img class="map" src="data:image/png;base64,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" alt="Map of the mini font, 6 by 8"><figcaption><code>PX_FONT_MINI</code>, 6 &times; 8.</figcaption></figure>
+
+<!-- ============================================================ -->
+<h2 id="keys">7. The keyboard</h2>
+
+<p>Keys are named by where they sit: <code>PX_KEY(row, col)</code>, row 0&ndash;6 from the top and column 0&ndash;5 from the left. The top two rows have 6 keys and the others 5. <kbd>ENTER</kbd> is <code>PX_KEY(2, 0)</code>. The same places name keys in the IR Remote's files (<code>R0C5</code> is XEQ).</p>
+
+<div class="kbd-map" role="img" aria-label="The PX-42F keyboard with each key's row and column">
+  <div class="k s5"><b>&Sigma;+</b><span>R0C0</span><i>SIGMA</i></div>
+  <div class="k s5"><b>1/x</b><span>R0C1</span></div>
+  <div class="k s5"><b>&radic;x</b><span>R0C2</span></div>
+  <div class="k s5"><b>LOG</b><span>R0C3</span></div>
+  <div class="k s5"><b>LN</b><span>R0C4</span></div>
+  <div class="k s5"><b>XEQ</b><span>R0C5</span><i>XEQ</i></div>
+  <div class="k s5"><b>STO</b><span>R1C0</span></div>
+  <div class="k s5"><b>RCL</b><span>R1C1</span></div>
+  <div class="k s5"><b>R&darr;</b><span>R1C2</span></div>
+  <div class="k s5"><b>SIN</b><span>R1C3</span></div>
+  <div class="k s5"><b>COS</b><span>R1C4</span></div>
+  <div class="k s5"><b>TAN</b><span>R1C5</span></div>
+  <div class="k s6"><b>ENTER</b><span>R2C0</span><i>ENTER</i></div>
+  <div class="k s6"><b>x&#8823;y</b><span>R2C1</span></div>
+  <div class="k s6"><b>+/&minus;</b><span>R2C2</span></div>
+  <div class="k s6"><b>E</b><span>R2C3</span></div>
+  <div class="k s6"><b>&larr;</b><span>R2C4</span><i>BACKSPACE</i></div>
+  <div class="k s6"><b>&#9650;</b><span>R3C0</span><i>ARROW_UP</i></div>
+  <div class="k s6"><b>7</b><span>R3C1</span></div>
+  <div class="k s6"><b>8</b><span>R3C2</span></div>
+  <div class="k s6"><b>9</b><span>R3C3</span></div>
+  <div class="k s6"><b>&divide;</b><span>R3C4</span></div>
+  <div class="k s6"><b>&#9660;</b><span>R4C0</span><i>ARROW_DN</i></div>
+  <div class="k s6"><b>4</b><span>R4C1</span></div>
+  <div class="k s6"><b>5</b><span>R4C2</span></div>
+  <div class="k s6"><b>6</b><span>R4C3</span></div>
+  <div class="k s6"><b>&times;</b><span>R4C4</span></div>
+  <div class="k s6"><b>SHIFT</b><span>R5C0</span><i>SHIFT</i></div>
+  <div class="k s6"><b>1</b><span>R5C1</span></div>
+  <div class="k s6"><b>2</b><span>R5C2</span></div>
+  <div class="k s6"><b>3</b><span>R5C3</span></div>
+  <div class="k s6"><b>&minus;</b><span>R5C4</span></div>
+  <div class="k s6 on"><b>ON</b><span>R6C0</span><i>quits the app</i></div>
+  <div class="k s6"><b>0</b><span>R6C1</span></div>
+  <div class="k s6"><b>.</b><span>R6C2</span></div>
+  <div class="k s6"><b>R/S</b><span>R6C3</span><i>RS</i></div>
+  <div class="k s6"><b>+</b><span>R6C4</span></div>
+</div>
+<p class="mono" style="color: var(--muted); font-size: 0.85rem;">Orange: the name after <code>PX_KEY_</code> in px_app.h, for example <code>PX_KEY_ENTER</code>.</p>
+
+<div class="fn"><pre>int key(int wait_ms);</pre><div>
+<p>Returns the next keyboard event, waiting at most <code>wait_ms</code> milliseconds for one. While it waits, the calculator sleeps.</p>
+<dl>
+<dt>wait_ms</dt><dd>0 to look without waiting, a positive number of milliseconds, or any negative number to wait as long as it takes.</dd>
+<dt>returns</dt><dd>One of:
+  <ul>
+    <li><code>PX_KEY(row, col)</code>: a key went down.</li>
+    <li><code>PX_KEY(row, col) | PX_KEY_RELEASED</code>: a key was let go.</li>
+    <li><code>PX_KEY_NONE</code> (&minus;1): the wait ran out.</li>
+    <li><code>PX_KEY_QUIT</code> (&minus;2): the app must return now.</li>
+  </ul></dd>
+</dl>
+<p>Each call returns one event. When several keys change together, each comes out on its own call, straight away, without waiting. Two keys can be down at once, and each gets its own down and up.</p>
+<p>Pressing <kbd>ON</kbd> makes <code>key()</code> return <code>PX_KEY_QUIT</code>; held for 2 seconds, it also turns the calculator off after the app returns. The Sleep Timer and an empty battery give <code>PX_KEY_QUIT</code> too, and turn it off. A computer connected over USB keeps the Sleep Timer from running out, as everywhere on the calculator.</p>
+</div></div>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Macro</th><th>Gives</th></tr></thead>
+<tbody>
+<tr><td><code>PX_KEY(row, col)</code></td><td>The key at that place.</td></tr>
+<tr><td><code>PX_KEY_ROW(k)</code>, <code>PX_KEY_COL(k)</code></td><td>The row and column of a key event, with or without <code>PX_KEY_RELEASED</code>.</td></tr>
+<tr><td><code>k &amp; PX_KEY_RELEASED</code></td><td>Not 0 if the event is a key being let go.</td></tr>
+<tr><td><code>PX_KEY_SIGMA</code>, <code>PX_KEY_XEQ</code>, <code>PX_KEY_ENTER</code>, <code>PX_KEY_BACKSPACE</code>, <code>PX_KEY_ARROW_UP</code>, <code>PX_KEY_ARROW_DN</code>, <code>PX_KEY_SHIFT</code>, <code>PX_KEY_RS</code></td><td>Names for common keys (orange in the map).</td></tr>
+</tbody>
+</table></div>
+
+<div class="fn"><pre>void on_key(int on_is_key);    /* API version 3 */</pre><div>
+<p>With 1, a short press of <kbd>ON</kbd> comes to <code>key()</code> as <code>PX_KEY_ON</code>, down and then up, instead of ending the app. The app then needs its own way out: for example, asking "Leave?" and returning. PX-BASIC does this. Held for 2 seconds, <kbd>ON</kbd> still turns the calculator off, with <code>PX_KEY_QUIT</code>, and the Sleep Timer and an empty battery still end the app. Every app starts with 0.</p>
+</div></div>
+
+<h4>Waiting for a key</h4>
+<pre><code>/* The next key pressed (releases skipped), or PX_KEY_QUIT. */
+static int wait_key(void) {
+    while (1) {
+        int k = px->key(-1);
+        if (k == PX_KEY_QUIT || !(k &amp; PX_KEY_RELEASED))
+            return k;
+    }
+}</code></pre>
+
+<h4>Keys that are held down</h4>
+<p>Track down and up events to know what's held, for example to move while a key is held:</p>
+<pre><code>static bool held[64];                  /* by PX_KEY(row, col) */
+
+int k = px->key(0);
+if (k >= 0)
+    held[k &amp; 63] = !(k &amp; PX_KEY_RELEASED);
+if (held[PX_KEY(4, 1)]) x--;           /* 4 held: left */
+if (held[PX_KEY(4, 3)]) x++;           /* 6 held: right */</code></pre>
+
+<!-- ============================================================ -->
+<h2 id="time">8. Time and random numbers</h2>
+
+<div class="fn"><pre>uint32_t millis(void);</pre><div>
+<p>Milliseconds since the calculator started. It wraps around after 49 days, so compare times by subtracting: <code>(int32_t) (t - px-&gt;millis()) &gt; 0</code> means <code>t</code> hasn't come yet.</p>
+</div></div>
+
+<div class="fn"><pre>void sleep(int ms);</pre><div>
+<p>Waits <code>ms</code> milliseconds, asleep, as <code>key()</code> does. It doesn't take key events: they wait for the next <code>key()</code>. A key pressed and let go during the sleep, though, is missed. It returns early if the Sleep Timer or an empty battery ends the app; the next <code>key()</code> then returns <code>PX_KEY_QUIT</code>.</p>
+</div></div>
+
+<div class="fn"><pre>void datetime(px_datetime_t *now);</pre><div>
+<p>The calculator's clock, the one set in <span class="mono">Settings &rarr; Date &amp; Time</span>.</p>
+<pre><code>typedef struct {
+    int32_t year;    /* 2026 */
+    int32_t month;   /* 1-12 */
+    int32_t day;     /* 1-31 */
+    int32_t hour;    /* 0-23 */
+    int32_t min;     /* 0-59 */
+    int32_t sec;     /* 0-59 */
+    int32_t ms;      /* 0-999 */
+    int32_t weekday; /* 0 = Sunday ... 6 = Saturday */
+} px_datetime_t;
+
+px_datetime_t now;
+px->datetime(&amp;now);
+char line[24];
+snprintf(line, sizeof(line), "%02ld:%02ld:%02ld", (long) now.hour, (long) now.min, (long) now.sec);</code></pre>
+</div></div>
+
+<div class="fn"><pre>uint32_t random(void);</pre><div>
+<p>A random 32-bit number. Each run of the app gets a different sequence, seeded from the clock. For a number from 0 to n &minus; 1: <code>px-&gt;random() % n</code>.</p>
+</div></div>
+
+<!-- ============================================================ -->
+<h2 id="sound">9. Sound</h2>
+
+<p>The PX-42F has a small speaker, and plays one sound at a time: starting a sound stops the one playing. The calculator's second processor plays it, so a sound can play while the app carries on:</p>
+<ul>
+  <li><code>tone()</code> and <code>play()</code> wait until the sound has played. Use them where the next thing should come after it.</li>
+  <li><code>tone_async()</code> and <code>play_async()</code> start the sound and return at once. Use them in a game: the frames keep coming while it plays.</li>
+</ul>
+<p>A sound still playing when the app ends is stopped. While a sound plays, the processor stays at full speed (the speaker's timing comes from its clock), so waiting in <code>key()</code> then saves less battery.</p>
+
+<div class="fn"><pre>void tone(int tone);</pre><div>
+<p>Plays one of the calculator's sounds:</p>
+<dl>
+<dt>0 &ndash; 9</dt><dd>The HP-42S's <code>TONE 0</code> to <code>TONE 9</code>, low to high: the files <code>/SOUNDS/TONES/TONE0.wav</code> to <code>TONE9.wav</code>.</dd>
+<dt>10</dt><dd>The error sound, <code>/SOUNDS/ERROR.wav</code>.</dd>
+</dl>
+<p>The owner can replace these files, so they may not sound the same on every calculator.</p>
+</div></div>
+
+<div class="fn"><pre>int play(const char *path);</pre><div>
+<p>Plays a WAV file from the drive: PCM (8, 16, 24 or 32-bit) or 32-bit float, 1 to 8 channels, 4 to 192 kHz. The calculator mixes it to mono, resamples it to 32 kHz and normalizes its loudness, as for its own sounds.</p>
+<dl>
+<dt>path</dt><dd>See <a href="#paths">paths</a>: <code>"JUMP.wav"</code> in the app's folder, or <code>"/SOUNDS/ON.wav"</code> from the top of the drive.</dd>
+<dt>returns</dt><dd>0 when it has played, or &minus;1 if the file can't be opened or isn't a WAV it can play.</dd>
+</dl>
+<pre><code>px->play("/SOUNDS/ON.wav");     /* the calculator's turn-on sound */
+px->play("COIN.wav");           /* /BIN/GAMES/MYGAME/COIN.wav */</code></pre>
+<p><code>play()</code> holds the app until the sound ends: for a long WAV, use <code>play_async()</code>. Before a sound starts, the calculator reads its whole file once to set its loudness, so even <code>play_async()</code> takes a moment for a long file.</p>
+</div></div>
+
+<div class="fn"><pre>void tone_async(int tone);
+int play_async(const char *path);</pre><div>
+<p>The same as <code>tone()</code> and <code>play()</code>, but they return as soon as the sound starts. <code>play_async()</code> returns 0, or &minus;1 if the file can't be played.</p>
+<pre><code>if (ate_apple)
+    px->tone_async(9);         /* a short high tone; the next frame doesn't wait */</code></pre>
+</div></div>
+
+<div class="fn"><pre>int sound_playing(void);
+void sound_stop(void);</pre><div>
+<p><code>sound_playing()</code> returns 1 while a sound plays. <code>sound_stop()</code> stops it at once.</p>
+<pre><code>px->play_async("MUSIC.wav");
+while (px->sound_playing() &amp;&amp; px->key(100) != PX_KEY_QUIT)
+    ;                          /* music until it ends or ON */
+px->sound_stop();</code></pre>
+</div></div>
+
+<!-- ============================================================ -->
+<h2 id="files">10. Files on the drive</h2>
+
+<p>The calculator's drive is a FAT disk in its flash memory, 12 MB. A computer sees the same files in USB Drive mode, so an app can read files you copy there (levels, pictures, sounds, data) and write files you can copy off.</p>
+
+<h3 id="paths">Paths</h3>
+<ul>
+  <li><strong>From the top of the drive:</strong> a path starting with <code>/</code>, such as <code>"/SOUNDS/ON.wav"</code> or <code>"/STATE"</code>.</li>
+  <li><strong>In the app's own folder:</strong> any other path, such as <code>"BEST"</code> or <code>"levels/1.txt"</code>. The folder is next to the app and named after it: <code>/BIN/GAMES/SNAKE/</code> for <code>/BIN/GAMES/SNAKE.bin</code>. It's made the first time the app writes a file in it.</li>
+  <li><code>""</code> is the app's folder itself, for <code>list()</code>.</li>
+  <li>A path has at most <code>PX_PATH_MAX</code> (96) characters. Names aren't case-sensitive, as on any FAT drive.</li>
+</ul>
+
+<h3>Whole files</h3>
+
+<div class="fn"><pre>int load(const char *path, void *data, int size);</pre><div>
+<p>Reads a file into <code>data</code>, at most <code>size</code> bytes.</p>
+<dl>
+<dt>returns</dt><dd>The bytes read, or &minus;1 if the file can't be opened. If it returns exactly <code>size</code>, the file may be longer.</dd>
+</dl>
+</div></div>
+
+<div class="fn"><pre>int save(const char *path, const void *data, int size);</pre><div>
+<p>Writes <code>size</code> bytes as the whole file, replacing it if it exists, and makes sure they're in flash before returning.</p>
+<dl>
+<dt>returns</dt><dd>0, or &minus;1 if it couldn't be written: the drive is full, or the folder doesn't exist.</dd>
+</dl>
+<pre><code>/* A best score, kept as text so it can be read on a computer. */
+static int load_best(void) {
+    char text[12] = "";
+    return px->load("BEST", text, sizeof(text) - 1) > 0 ? atoi(text) : 0;
+}
+
+static void save_best(int best) {
+    char text[12];
+    int n = snprintf(text, sizeof(text), "%d\n", best);
+    px->save("BEST", text, n);
+}</code></pre>
+</div></div>
+
+<h3>Reading and writing in pieces</h3>
+
+<div class="fn"><pre>int open(const char *path, const char *mode);
+int read(int file, void *data, int size);
+int write(int file, const void *data, int size);
+int close(int file);</pre><div>
+<p>For files too big to hold whole, or written bit by bit.</p>
+<dl>
+<dt>open</dt><dd><code>mode</code> <code>"r"</code> to read, or <code>"w"</code> to write a new, empty file (an old one is replaced). Returns a file number for the other three calls, or &minus;1. At most <code>PX_FILES_OPEN</code> (4) files are open at once.</dd>
+<dt>read</dt><dd>Up to <code>size</code> bytes: returns how many were read, 0 at the end of the file, &minus;1 on an error.</dd>
+<dt>write</dt><dd>Returns how many bytes were written, or &minus;1. Only for files opened with <code>"w"</code>.</dd>
+<dt>close</dt><dd>Writes what's left to flash. Returns 0, or &minus;1 if what was written is lost. Files still open when the app ends are closed for it.</dd>
+</dl>
+<pre><code>/* Copy a log line by line to the console. */
+int f = px->open("/LOG.TXT", "r");
+char buf[256];
+int n;
+while (f >= 0 &amp;&amp; (n = px->read(f, buf, sizeof(buf))) > 0)
+    px->serial_write(buf, n);
+if (f >= 0)
+    px->close(f);</code></pre>
+</div></div>
+
+<h3>Folders</h3>
+
+<div class="fn"><pre>int list(const char *dir, const char *ext, char (*names)[PX_FILE_NAME_MAX + 1], int max);</pre><div>
+<p>The files in folder <code>dir</code> whose names end in <code>ext</code>, without it, sorted alphabetically. Folders aren't listed.</p>
+<dl>
+<dt>dir</dt><dd><code>""</code> for the app's folder, or any <a href="#paths">path</a>.</dd>
+<dt>ext</dt><dd>The ending to match, such as <code>".txt"</code>, not case-sensitive. <code>""</code> lists every file.</dd>
+<dt>names</dt><dd>Room for <code>max</code> names of up to <code>PX_FILE_NAME_MAX</code> (28) characters. Longer names are skipped.</dd>
+<dt>returns</dt><dd>How many names it wrote, at most <code>max</code>.</dd>
+</dl>
+<pre><code>static char levels[20][PX_FILE_NAME_MAX + 1];
+int count = px->list("", ".lvl", levels, 20);    /* "1", "2", ... for 1.lvl, 2.lvl */</code></pre>
+</div></div>
+
+<div class="fn"><pre>int mkdir(const char *path);
+int remove(const char *path);</pre><div>
+<p><code>mkdir</code> makes a folder; it's fine if it's already there. <code>remove</code> deletes a file or an empty folder. Both return 0, or &minus;1.</p>
+</div></div>
+
+<div class="note"><strong>Flash wears out.</strong> Every write ends up in flash memory, which takes on the order of 100,000 writes to each part before it fails. Save on purpose (a game over, a setting changed), never in a loop.</div>
+
+<!-- ============================================================ -->
+<h2 id="serial">11. The USB serial console</h2>
+
+<p>Connected to a computer by USB, the calculator shows up as two serial ports. The first, "PX-42F Console", belongs to the app while it runs.</p>
+
+<div class="fn"><pre>int serial_write(const void *data, int size);
+int serial_read(void *data, int size);</pre><div>
+<p><code>serial_write</code> sends bytes to the console and returns <code>size</code>. Without a computer listening, nothing is sent and it doesn't wait. <code>serial_read</code> returns what has arrived, at most <code>size</code> bytes; 0 if nothing has, without waiting.</p>
+</div></div>
+
+<p><strong><code>printf()</code> works too.</strong> The runtime sends <code>stdout</code> to the console a line at a time, so end lines with <code>\n</code>. The C library is newlib-nano: <code>%f</code> isn't supported by default. Print a float as two integers, or link with <code>-u _printf_float</code> (about 10 KB more).</p>
+
+<pre><code>printf("level %d, score %d\n", level, score);</code></pre>
+
+<p><strong>To watch it on a Mac,</strong> open the first of its two ports in a terminal (<code>ls /dev/cu.usbmodem*</code> lists them): <code>screen /dev/cu.usbmodem2101 115200</code>, with your port's name. Leave with <kbd>Ctrl-A</kbd> then <kbd>K</kbd>. On Windows, use PuTTY or the Arduino IDE's serial monitor on the console's COM port.</p>
+
+<!-- ============================================================ -->
+<h2 id="ir">12. Infrared</h2>
+
+<p>The PX-42F has an infrared LED on its top edge, the kind TV remotes use. It's driven by hardware, so an app can send any remote-control code with exact timing.</p>
+
+<div class="fn"><pre>void ir_send(const px_ir_burst_t *burst);</pre><div>
+<p>Sends one transmission and returns when it's out. If the last one ended less than <code>us[0]</code> ago, it first waits until it did.</p>
+<pre><code>typedef struct {
+    uint32_t carrier_hz;              /* the blinking while "on": 10000-100000, usually 38000 */
+    int32_t count;                    /* how many times in us[]: 2-112 */
+    uint32_t us[PX_IR_MAX_TIMINGS];   /* microseconds, alternately off and on */
+} px_ir_burst_t;</code></pre>
+<p><code>us[0]</code> is the gap before the transmission, counted from the end of the last one; the LED is off. Then <code>us[1]</code> is the first pulse (on), <code>us[2]</code> a space (off), and so on, ending with a pulse. A burst with a <code>count</code> or <code>carrier_hz</code> out of range sends nothing.</p>
+<pre><code>/* NEC: address 0x04, command 0x08 (a TV's power, for example). */
+static void nec_send(uint8_t address, uint8_t command) {
+    static px_ir_burst_t b;
+    uint8_t bytes[4] = {address, (uint8_t) ~address, command, (uint8_t) ~command};
+    b.carrier_hz = 38000;
+    b.count = 0;
+    b.us[b.count++] = 110000;                  /* gap since the last one */
+    b.us[b.count++] = 9000;                    /* leader: on 9 ms */
+    b.us[b.count++] = 4500;                    /*         off 4.5 ms */
+    for (int i = 0; i &lt; 32; i++) {
+        b.us[b.count++] = 560;                 /* each bit: on 560 us */
+        b.us[b.count++] = (bytes[i / 8] >> (i % 8)) &amp; 1 ? 1690 : 560;   /* off: 1 long, 0 short */
+    }
+    b.us[b.count++] = 560;                     /* the final pulse */
+    px->ir_send(&amp;b);
+}</code></pre>
+<p>For the common protocols, use the encoders in the PX-42F-IR-Remote project: <code>src/irproto.c</code> makes these bursts for Flipper's 14 protocols (NEC, Samsung, Sony SIRC, RC5, RC6 and others), tested against the Flipper Zero's own.</p>
+</div></div>
+
+<p>The PX-42F has no infrared receiver, so it can send codes but not learn them.</p>
+
+<!-- ============================================================ -->
+<h2 id="power">13. Power</h2>
+
+<div class="fn"><pre>int battery_mv(void);</pre><div>
+<p>The battery's voltage in millivolts. A full Li-ion cell is about 4200 mV. The calculator turns itself off at about 3450 mV (and <code>key()</code> returns <code>PX_KEY_QUIT</code> first). While charging, the reading is the charger's, a little higher.</p>
+</div></div>
+
+<div class="fn"><pre>int usb_connected(void);</pre><div>
+<p>1 if a computer is connected over USB and using the calculator. The calculator is then charging, and the Sleep Timer doesn't run.</p>
+</div></div>
+
+<p><strong>Turning off.</strong> Return <code>PX_EXIT_OFF</code> from <code>app_main()</code> to turn the calculator off when the app ends. The calculator also turns off after <kbd>ON</kbd> is held for 2 seconds, when the Sleep Timer runs out, or when the battery is empty: <code>key()</code> returns <code>PX_KEY_QUIT</code> for each, then the app returns.</p>
+
+<!-- ============================================================ -->
+<h2 id="decimal">14. Decimal numbers</h2>
+
+<p>The calculator computes with IEEE 754 decimal128 numbers, from Intel's decimal library, as Plus42 does: 34 significant digits, exponents up to &plusmn;6144, and decimal, so <code>0.1 + 0.2</code> is exactly <code>0.3</code>. An app can use the same numbers and functions through the table, with no library of its own. They need firmware with API version 2.</p>
+
+<div class="fn"><pre>typedef struct { uint32_t w[4]; } px_dec_t;   /* 16 bytes, aligned to 16 */</pre><div>
+<p>A number. Copy it, pass it and keep it in arrays like any struct; compute with it only through the functions below.</p>
+</div></div>
+
+<div class="fn"><pre>int dec(int op, px_dec_t *r, const px_dec_t *a, const px_dec_t *b);</pre><div>
+<p>One operation: <code>r = a op b</code>, or <code>r = op(a)</code> for the one-argument ones (<code>b</code> is then ignored, and can be <code>NULL</code>). <code>r</code> can be the same as <code>a</code> or <code>b</code>. Returns 0, or &minus;1 for an operation the firmware doesn't have (<code>r</code> is left alone).</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Operations</th><th>Do</th></tr></thead>
+<tbody>
+<tr><td><code>PX_DEC_ADD SUB MUL DIV</code></td><td><code>a + b</code>, <code>a &minus; b</code>, <code>a &times; b</code>, <code>a / b</code></td></tr>
+<tr><td><code>PX_DEC_POW</code></td><td><code>a</code> to the power <code>b</code></td></tr>
+<tr><td><code>PX_DEC_REM</code></td><td>the IEEE remainder: <code>a &minus; b&middot;n</code>, <code>n</code> = <code>a/b</code> rounded to the nearest whole number</td></tr>
+<tr><td><code>PX_DEC_ATAN2</code>, <code>PX_DEC_HYPOT</code></td><td>the angle of the point (<code>b</code>, <code>a</code>); <code>&radic;(a&sup2; + b&sup2;)</code></td></tr>
+<tr><td><code>PX_DEC_NEG ABS SQRT</code></td><td><code>&minus;a</code>, <code>|a|</code>, <code>&radic;a</code></td></tr>
+<tr><td><code>PX_DEC_EXP LN LOG10 EXPM1 LN1P</code></td><td><code>e<sup>a</sup></code>, ln <code>a</code>, log<sub>10</sub> <code>a</code>, <code>e<sup>a</sup> &minus; 1</code>, ln(1 + <code>a</code>)</td></tr>
+<tr><td><code>PX_DEC_SIN COS TAN ASIN ACOS ATAN</code></td><td>trigonometry, in radians</td></tr>
+<tr><td><code>PX_DEC_SINH COSH TANH ASINH ACOSH ATANH</code></td><td>hyperbolic</td></tr>
+<tr><td><code>PX_DEC_GAMMA</code></td><td>&Gamma;(<code>a</code>), which is (<code>a</code> &minus; 1)! for whole numbers</td></tr>
+<tr><td><code>PX_DEC_FLOOR CEIL TRUNC</code></td><td>to a whole number: down, up, toward 0</td></tr>
+</tbody>
+</table></div>
+<p>A result too big is &plusmn;infinity, and one with no answer (&radic;&minus;1, 0/0) is NaN, "not a number". Check with <code>dec_class()</code> before using a result.</p>
+</div></div>
+
+<div class="fn"><pre>void dec_from_int(px_dec_t *r, int32_t v);
+int dec_to_int(int32_t *r, const px_dec_t *a);
+int dec_from_string(px_dec_t *r, const char *s);
+void dec_to_string(char buf[PX_DEC_STRING_MAX], const px_dec_t *a);</pre><div>
+<dl>
+<dt>dec_to_int</dt><dd>Truncates toward 0. Returns 0, or &minus;1 if <code>a</code> is out of range or not a number.</dd>
+<dt>dec_from_string</dt><dd>Reads <code>"12"</code>, <code>"-1.5"</code>, <code>".5"</code>, <code>"2E-3"</code>. Returns 0, or &minus;1 if it isn't a number (<code>r</code> is then NaN).</dd>
+<dt>dec_to_string</dt><dd>The exact value, as the library writes it: a sign, every digit, then the exponent. <code>"+15E-4"</code> is 0.0015; others are <code>"+Inf"</code> and <code>"+NaN"</code>. To show a number to a person, round and place the decimal point yourself: the Tiny BASIC project's <code>format_number()</code> does it, in <code>src/basic.c</code>.</dd>
+</dl>
+</div></div>
+
+<div class="fn"><pre>int dec_cmp(const px_dec_t *a, const px_dec_t *b);
+int dec_class(const px_dec_t *a);</pre><div>
+<p><code>dec_cmp</code> returns &minus;1 (<code>a</code> &lt; <code>b</code>), 0 or 1, and 2 if either is NaN. <code>dec_class</code> returns <code>PX_DEC_FINITE</code>, <code>PX_DEC_INF</code> or <code>PX_DEC_NAN</code>.</p>
+<pre><code>/* The square root of 2, to 34 digits, on the console. */
+px_dec_t two, root;
+char s[PX_DEC_STRING_MAX];
+px->dec_from_int(&amp;two, 2);
+px->dec(PX_DEC_SQRT, &amp;root, &amp;two, NULL);
+px->dec_to_string(s, &amp;root);
+printf("%s\n", s);      /* +1414213562373095048801688724209698E-33 */</code></pre>
+</div></div>
+
+<div class="note">In the simulator a number is the computer's binary <code>double</code>, with about 16 digits, so results can differ from the calculator's in the last digits, and <code>0.1 + 0.2</code> isn't quite 0.3. Round when you print, and compare results with a tolerance in tests.</div>
+
+<!-- ============================================================ -->
+<h2 id="recipes">15. Recipes</h2>
+
+<h3>A game loop</h3>
+<p>Draw a frame, then wait for the next one in <code>key()</code>, handling the keys that come meanwhile. The calculator sleeps between frames, and the frames keep time even when keys are pressed.</p>
+<pre><code>#define FRAME_MS 50   /* 20 frames a second */
+
+/* The next key before time t, or PX_KEY_NONE at t. A frame that's late
+ * doesn't wait at all: a negative wait would mean "forever". */
+static int key_before(uint32_t t) {
+    int32_t left = (int32_t) (t - px->millis());
+    return px->key(left > 0 ? (int) left : 0);
+}
+
+int app_main(void) {
+    uint32_t next = px->millis();
+    while (1) {
+        update();             /* move things */
+        draw();               /* draw the frame, then px->show() */
+        next += FRAME_MS;
+        int k;
+        while ((k = key_before(next)) != PX_KEY_NONE) {
+            if (k == PX_KEY_QUIT)
+                return PX_EXIT_MENU;
+            if (!(k &amp; PX_KEY_RELEASED))
+                handle_key(k);
+        }
+    }
+}</code></pre>
+
+<h3>A menu</h3>
+<pre><code>/* Up and down move, ENTER chooses. Returns the item, or -1 to quit. */
+static int menu(const char *title, const char *const *items, int count) {
+    int sel = 0;
+    while (1) {
+        px->clear();
+        px->fill(0, 0, PX_SCREEN_W, 12, 1);
+        px->text(2, 0, title, PX_FONT_SMALL, 1);
+        for (int i = 0; i &lt; count; i++) {
+            if (i == sel)
+                px->fill(0, 14 + i * 13, PX_SCREEN_W, 13, 1);
+            px->text(4, 15 + i * 13, items[i], PX_FONT_SMALL, i == sel);
+        }
+        px->show();
+        int k = px->key(-1);
+        if (k == PX_KEY_QUIT)
+            return -1;
+        if (k == PX_KEY_ENTER)
+            return sel;
+        if (k == PX_KEY_ARROW_UP)
+            sel = (sel + count - 1) % count;
+        if (k == PX_KEY_ARROW_DN)
+            sel = (sel + 1) % count;
+    }
+}</code></pre>
+
+<h3>Reading a text file line by line</h3>
+<pre><code>static char text[16 * 1024];             /* static: too big for the stack */
+
+int n = px->load("words.txt", text, sizeof(text) - 1);
+if (n >= 0) {
+    text[n] = 0;
+    for (char *line = strtok(text, "\r\n"); line; line = strtok(NULL, "\r\n"))
+        add_word(line);
+}</code></pre>
+
+<h3>Typing a number</h3>
+<p>The digit keys' places: 0 is <code>PX_KEY(6, 1)</code>; 1, 2, 3 are row 5; 4, 5, 6 row 4; 7, 8, 9 row 3, columns 1 to 3.</p>
+<pre><code>/* The digit on a key, or -1. */
+static int digit_of(int k) {
+    int r = PX_KEY_ROW(k), c = PX_KEY_COL(k);
+    if (k == PX_KEY(6, 1))
+        return 0;
+    if (r >= 3 &amp;&amp; r &lt;= 5 &amp;&amp; c >= 1 &amp;&amp; c &lt;= 3)
+        return (5 - r) * 3 + c;
+    return -1;
+}</code></pre>
+
+<!-- ============================================================ -->
+<h2 id="sim">16. The simulator</h2>
+
+<p><code>make sim</code> (the <em>Simulate</em> task) builds your app for your computer, with a stand-in for the calculator, and runs it through a script of keys and pauses. It saves screenshots as PNG files: the quickest way to see a change, and to check that a game behaves, without copying anything to the calculator.</p>
+
+<p>The script is <code>SIM_SCRIPT</code> in the <code>Makefile</code>. It's a list of words, run in order:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Word</th><th>Does</th></tr></thead>
+<tbody>
+<tr><td><code>R0C0</code> &hellip; <code>R6C5</code></td><td>Presses the key at that place. <code>key()</code> returns it going down, then going up on the next call.</td></tr>
+<tr><td><code>SIGMA</code> <code>XEQ</code> <code>ENTER</code> <code>BACKSPACE</code> <code>UP</code> <code>DOWN</code> <code>SHIFT</code> <code>RS</code></td><td>Presses that key, by name.</td></tr>
+<tr><td><code>250</code></td><td>Lets 250 ms pass with no keys.</td></tr>
+<tr><td><code>shot:NAME</code></td><td>Saves the screen, as of the last <code>show()</code>, as <code>build/sim-out/NAME.png</code>.</td></tr>
+<tr><td><code>serial:TEXT</code></td><td>TEXT arrives on the USB console, then Enter: <code>serial_read()</code> returns it. <code>_</code> stands for a space. Put a word with <code>( ) " ;</code> in it in single quotes in the <code>Makefile</code>: <code>'serial:PRINT_SQR(2)'</code>.</td></tr>
+<tr><td><code>ON</code></td><td>Presses <kbd>ON</kbd>: <code>key()</code> returns <code>PX_KEY_QUIT</code>, or <code>PX_KEY_ON</code> after <code>on_key(1)</code>.</td></tr>
+<tr><td><code>QUIT</code></td><td>Ends the app, as the Sleep Timer does. The end of the script does the same.</td></tr>
+</tbody>
+</table></div>
+<pre><code>SIM_SCRIPT := shot:title ENTER 1500 shot:playing XEQ 900 SIGMA 2000 shot:later ON</code></pre>
+
+<ul>
+  <li><strong>Time is virtual.</strong> It moves on through pauses and the app's waits, and by 1 ms each time the app reads it, so a loop that never waits still sees time pass. A 10-second script runs in a moment, and the same script gives the same result every time. The random numbers are the same on each run too.</li>
+  <li><strong>The drive is a folder.</strong> <code>sim/drive</code> holds what the calculator's drive would: put files the app reads there, at the same paths. Each <code>make sim</code> works on a fresh copy, <code>build/sim-drive</code>, so what the app writes doesn't pile up in your project.</li>
+  <li><strong>What's printed.</strong> Sounds, IR transmissions and serial output are printed, with the virtual time.</li>
+  <li><strong>Memory checks.</strong> The simulator is built with AddressSanitizer: writing past an array stops it and says where.</li>
+</ul>
+<p>Run the simulator yourself to try other scripts: <code>build/sim OUT_DIR DRIVE_DIR WORD...</code>.</p>
+
+<div class="note">The simulator isn't the calculator. The 128 KB limit, the stack size, the watchdog and the speed only apply on the calculator. Try every app there before you share it.</div>
+
+<!-- ============================================================ -->
+<h2 id="debug">17. Debugging</h2>
+
+<h3>Print</h3>
+<p><code>printf()</code> to the USB console (<a href="#serial">section 11</a>) is the simplest tool: print what the app does, and watch it in a terminal.</p>
+
+<h3>A crash</h3>
+<p>When an app crashes, the calculator restarts. Its start screen shows a report until a key is pressed:</p>
+<pre><code>Last reset:
+FAULT core1 PC=20060C41 LR=200608B5 ...</code></pre>
+<p>Addresses from <code>20060000</code> up are in your app. The app is linked at the address it runs at, so the toolchain can name the line:</p>
+<pre><code>~/.pico-sdk/toolchain/15_2_Rel1/bin/arm-none-eabi-addr2line -f -e build/NAME.elf 0x20060C41 0x200608B5</code></pre>
+<p><code>PC</code> is where it stopped; <code>LR</code> is usually the function that called it. Build with <code>-g</code> (add it to <code>CFLAGS</code>) for exact lines. <code>build/NAME.map</code> lists where every function and variable is.</p>
+
+<h3>A hang</h3>
+<p>An app that runs 100 ms without calling into <code>px</code> is restarted by the watchdog. The start screen then says <code>WATCHDOG RESET APP</code>: the app was in its own code, in a loop that doesn't wait.</p>
+
+<!-- ============================================================ -->
+<h2 id="format">18. The .bin file and the build</h2>
+
+<p>A <code>.bin</code> is the app's memory image as it will be in RAM, from <code>0x20060000</code>. It starts with a 24-byte header:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Offset</th><th>Field</th><th>Contents</th></tr></thead>
+<tbody>
+<tr><td>0</td><td><code>magic</code></td><td><code>0x50415850</code>, "PXAP" in the file.</td></tr>
+<tr><td>4</td><td><code>api_version</code></td><td>The <code>PX_APP_API_VERSION</code> it was built with.</td></tr>
+<tr><td>8</td><td><code>image_size</code></td><td>The whole file's size: header, code and data.</td></tr>
+<tr><td>12</td><td><code>bss_size</code></td><td>Zeroed RAM just after the image, for variables that start at 0.</td></tr>
+<tr><td>16</td><td><code>entry</code></td><td>The address of the entry function, with bit 0 set (Thumb code).</td></tr>
+<tr><td>20</td><td><code>crc32</code></td><td>zlib's CRC-32 of everything after the header.</td></tr>
+</tbody>
+</table></div>
+<p>All fields are 32-bit little-endian (<code>px_app_header_t</code> in <code>px_app.h</code>).</p>
+
+<p><strong>The build.</strong> <code>make</code> does this:</p>
+<ol>
+  <li><code>arm-none-eabi-gcc</code> compiles and links <code>src/*.c</code> with <code>px42f/runtime.c</code> for the RP2350's Cortex-M33: Thumb code, <code>-mfloat-abi=softfp</code> as the firmware uses, <code>-Os</code>, and the newlib-nano C library without its start-up code.</li>
+  <li><code>px42f/app.ld</code> puts the header first, then code, constants and data, all at <code>0x20060000</code>. The zeroed variables come after, then the heap. A section the script doesn't place stops the link (<code>--orphan-handling=error</code>), so nothing ends up outside the image.</li>
+  <li><code>objcopy</code> takes the image out of the <code>.elf</code>, and <code>px42f/pxbin.py</code> fills in the sizes and the CRC.</li>
+</ol>
+<p>The C library is there: <code>string.h</code>, <code>stdlib.h</code> (with <code>malloc</code>), <code>stdio.h</code>'s <code>snprintf</code> and <code>printf</code>, <code>ctype.h</code>. <code>float</code> runs on the processor's FPU; <code>double</code> works too, more slowly, in software. <code>math.h</code> needs <code>-lm</code> added to <code>LDFLAGS</code>.</p>
+
+<!-- ============================================================ -->
+<h2 id="errors">19. Messages when an app won't start</h2>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Message</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td>Not a PX-42F app</td><td>The file doesn't start with a PX-42F app header, or its entry point is outside it. It wasn't built with this framework, or it was overwritten.</td></tr>
+<tr><td>Needs a newer firmware</td><td>It was built for a later <code>PX_APP_API_VERSION</code> than the calculator's firmware has. Update the firmware.</td></tr>
+<tr><td>The file is damaged</td><td>Its size or checksum is wrong: the copy was cut short or changed. Copy it again.</td></tr>
+<tr><td>Too big (128 KB at most)</td><td>Code, data and variables add up to more than 128 KB.</td></tr>
+<tr><td>Can't save the memory</td><td>The calculator couldn't save its own memory to the drive (it's full), so it won't risk it.</td></tr>
+<tr><td>Can't open the file / Can't read the file</td><td>The drive couldn't be read.</td></tr>
+</tbody>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="versions">20. Versions</h2>
+
+<p><code>px_app.h</code> has <code>PX_APP_API_VERSION</code>, now 3. Version 2 added the decimal numbers, version 3 <code>on_key()</code>. New firmware only adds functions at the end of the table and raises the number, so:</p>
+<ul>
+  <li>An app keeps working on every later firmware.</li>
+  <li>A calculator with older firmware than the app was built for refuses it ("Needs a newer firmware"), rather than calling a function it doesn't have.</li>
+  <li>To use functions a newer firmware adds, copy its <code>px_app.h</code> (from the PX-42F-Plus firmware project) into your app's <code>px42f/</code> folder and rebuild. Your app then needs that firmware too.</li>
+</ul>
+<p><code>px-&gt;version</code> is the firmware's own version number, for an app that wants to use a newer function only where it exists.</p>
+
+<!-- ============================================================ -->
+<h2 id="summary">21. All functions at a glance</h2>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Function</th><th>Does</th></tr></thead>
+<tbody>
+<tr><th colspan="2">Screen</th></tr>
+<tr><td><code>void show(void)</code></td><td>Sends the picture to the panel.</td></tr>
+<tr><td><code>void clear(void)</code></td><td>All white.</td></tr>
+<tr><td><code>void pixel(x, y, black)</code></td><td>One pixel.</td></tr>
+<tr><td><code>int get_pixel(x, y)</code></td><td>1 if black.</td></tr>
+<tr><td><code>void fill(x, y, w, h, black)</code></td><td>A rectangle.</td></tr>
+<tr><td><code>void line(x0, y0, x1, y1, black)</code></td><td>A line.</td></tr>
+<tr><td><code>void bitmap(x, y, w, h, bits, stride)</code></td><td>A 1-bit picture; its 0 bits are transparent.</td></tr>
+<tr><td><code>int text(x, y, s, font, inverse)</code></td><td>Text; returns the x after it.</td></tr>
+<tr><td><code>int text_width(s, font)</code></td><td>Text's width in pixels.</td></tr>
+<tr><td><code>int font_height(font)</code></td><td>A font's height.</td></tr>
+<tr><td><code>uint8_t *screen</code></td><td>The picture's memory.</td></tr>
+<tr><th colspan="2">Keyboard</th></tr>
+<tr><td><code>int key(wait_ms)</code></td><td>The next key down or up, <code>PX_KEY_NONE</code> or <code>PX_KEY_QUIT</code>.</td></tr>
+<tr><th colspan="2">Time</th></tr>
+<tr><td><code>uint32_t millis(void)</code></td><td>Milliseconds since start.</td></tr>
+<tr><td><code>void sleep(ms)</code></td><td>Waits, asleep.</td></tr>
+<tr><td><code>void datetime(now)</code></td><td>The calendar clock.</td></tr>
+<tr><td><code>uint32_t random(void)</code></td><td>A random number.</td></tr>
+<tr><th colspan="2">Sound</th></tr>
+<tr><td><code>void tone(tone)</code></td><td>TONE 0&ndash;9, 10 = error, waiting for it to end.</td></tr>
+<tr><td><code>int play(path)</code></td><td>A WAV file, waiting for it to end.</td></tr>
+<tr><td><code>void tone_async(tone)</code>, <code>int play_async(path)</code></td><td>The same, not waiting.</td></tr>
+<tr><td><code>int sound_playing(void)</code></td><td>1 while a sound plays.</td></tr>
+<tr><td><code>void sound_stop(void)</code></td><td>Stops it.</td></tr>
+<tr><th colspan="2">Files</th></tr>
+<tr><td><code>int load(path, data, size)</code></td><td>A whole file in.</td></tr>
+<tr><td><code>int save(path, data, size)</code></td><td>A whole file out.</td></tr>
+<tr><td><code>int open(path, mode)</code></td><td>Opens a file, <code>"r"</code> or <code>"w"</code>.</td></tr>
+<tr><td><code>int read(file, data, size)</code></td><td>Reads from it.</td></tr>
+<tr><td><code>int write(file, data, size)</code></td><td>Writes to it.</td></tr>
+<tr><td><code>int close(file)</code></td><td>Closes it.</td></tr>
+<tr><td><code>int remove(path)</code></td><td>Deletes a file or an empty folder.</td></tr>
+<tr><td><code>int mkdir(path)</code></td><td>Makes a folder.</td></tr>
+<tr><td><code>int list(dir, ext, names, max)</code></td><td>Lists files.</td></tr>
+<tr><th colspan="2">Serial</th></tr>
+<tr><td><code>int serial_write(data, size)</code></td><td>To the USB console (also <code>printf</code>).</td></tr>
+<tr><td><code>int serial_read(data, size)</code></td><td>What has come in.</td></tr>
+<tr><th colspan="2">Infrared</th></tr>
+<tr><td><code>void ir_send(burst)</code></td><td>One transmission.</td></tr>
+<tr><th colspan="2">Power</th></tr>
+<tr><td><code>int battery_mv(void)</code></td><td>Battery voltage.</td></tr>
+<tr><td><code>int usb_connected(void)</code></td><td>1 on a computer's USB.</td></tr>
+<tr><th colspan="2">Decimal numbers (API version 2)</th></tr>
+<tr><td><code>int dec(op, r, a, b)</code></td><td>Arithmetic and functions: <code>PX_DEC_ADD</code> &hellip; <code>PX_DEC_TRUNC</code>.</td></tr>
+<tr><td><code>void dec_from_int(r, v)</code>, <code>int dec_to_int(r, a)</code></td><td>From and to a whole number.</td></tr>
+<tr><td><code>int dec_from_string(r, s)</code>, <code>void dec_to_string(buf, a)</code></td><td>From and to text.</td></tr>
+<tr><td><code>int dec_cmp(a, b)</code>, <code>int dec_class(a)</code></td><td>Compare; finite, infinite or NaN.</td></tr>
+<tr><th colspan="2">Version 3</th></tr>
+<tr><td><code>void on_key(on_is_key)</code></td><td><kbd>ON</kbd> as a key (<code>PX_KEY_ON</code>) instead of ending the app.</td></tr>
+<tr><th colspan="2">Return values of <code>app_main()</code></th></tr>
+<tr><td><code>PX_EXIT_MENU</code> (0)</td><td>Back to Settings &rarr; Games &amp; Apps.</td></tr>
+<tr><td><code>PX_EXIT_OFF</code> (1)</td><td>Turn the calculator off.</td></tr>
+</tbody>
+</table></div>
+
+<footer>
+PX-42F App Manual &middot; framework API version 3 &middot; for PX-42F-Plus firmware with Settings &rarr; Games &amp; Apps.
+</footer>
+
+</main>
+</body>
+</html>
