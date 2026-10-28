@@ -142,6 +142,8 @@ saves something there.
 | `px42f/app.ld` | Places the app at 0x20060000, where the calculator loads it. |
 | `px42f/pxbin.py` | Turns the linked app into the `.bin`: size and checksum. |
 | `sim/` | The simulator: `sim.c`, the calculator's fonts and PNG writer, and `drive/`. |
+| `tools/sync_framework.sh` | Copies `px_app.h` (from the firmware) and `px42f/`, `sim/` into every app project next to this one, so they never differ. `--check` only reports. Run it after changing the framework. |
+| `tools/make_manual.py` | Builds `framework_manual.html` from `tools/manual.src.html` and the pictures in `tools/img/`. Edit the source, not the HTML. |
 
 ## Versions
 

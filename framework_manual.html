@@ -857,7 +857,7 @@ static int digit_of(int k) {
 <tr><td><code>shot:NAME</code></td><td>Saves the screen, as of the last <code>show()</code>, as <code>build/sim-out/NAME.png</code>.</td></tr>
 <tr><td><code>serial:TEXT</code></td><td>TEXT arrives on the USB console, then Enter: <code>serial_read()</code> returns it. <code>_</code> stands for a space. Put a word with <code>( ) " ;</code> in it in single quotes in the <code>Makefile</code>: <code>'serial:PRINT_SQR(2)'</code>.</td></tr>
 <tr><td><code>ON</code></td><td>Presses <kbd>ON</kbd>: <code>key()</code> returns <code>PX_KEY_QUIT</code>, or <code>PX_KEY_ON</code> after <code>on_key(1)</code>.</td></tr>
-<tr><td><code>QUIT</code></td><td>Ends the app, as the Sleep Timer does. The end of the script does the same.</td></tr>
+<tr><td><code>QUIT</code></td><td>Ends the app, as the Sleep Timer does, when it next waits for a key (a program still running finishes first). The end of the script does the same.</td></tr>
 </tbody>
 </table></div>
 <pre><code>SIM_SCRIPT := shot:title ENTER 1500 shot:playing XEQ 900 SIGMA 2000 shot:later ON</code></pre>
