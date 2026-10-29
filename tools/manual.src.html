@@ -124,7 +124,7 @@ footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--rule);
 
 <header class="cover">
 <h1>PX-42F App Manual</h1>
-<p>Writing native games and apps for the PX-42F calculator. Framework API version 3.</p>
+<p>Writing native games and apps for the PX-42F calculator. Framework API version 4.</p>
 </header>
 
 <nav class="toc">
@@ -209,7 +209,7 @@ footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--rule);
 <tr><td><code>px42f/runtime.c</code></td><td>The <code>.bin</code>'s header and entry, the memory <code>malloc()</code> uses, and <code>printf()</code> to the console.</td></tr>
 <tr><td><code>px42f/app.ld</code></td><td>The linker script: places the app at <code>0x20060000</code>, where the calculator loads it.</td></tr>
 <tr><td><code>px42f/pxbin.py</code></td><td>Turns the linked program into the <code>.bin</code>: fills in its size and checksum.</td></tr>
-<tr><td><code>sim/</code></td><td>The simulator (<code>sim.c</code>), the calculator's fonts and PNG writer, and <code>drive/</code>, the simulated drive.</td></tr>
+<tr><td><code>sim/</code></td><td>The simulator (<code>sim.c</code>), the calculator's fonts and PNG writer, the live simulator (<code>live.py</code>, <code>live.html</code>), and <code>drive/</code>, the simulated drive.</td></tr>
 <tr><td><code>Makefile</code></td><td><code>NAME</code>, <code>KIND</code>, <code>SIM_SCRIPT</code>, and the targets <code>all</code>, <code>sim</code>, <code>install</code> and <code>clean</code>.</td></tr>
 <tr><td><code>.vscode/</code></td><td>The VS Code tasks (Build, Simulate, Install on the PX-42F, Clean) and IntelliSense set up for the ARM compiler.</td></tr>
 </tbody>
@@ -563,6 +563,25 @@ while (px->sound_playing() &amp;&amp; px->key(100) != PX_KEY_QUIT)
 px->sound_stop();</code></pre>
 </div></div>
 
+<div class="fn"><pre>int midi_play(const char *path);    /* API version 4 */
+void midi_status(px_midi_status_t *status);</pre><div>
+<p>Plays a Standard MIDI File (<code>.mid</code>, format 0 or 1, up to 128 KB) on the calculator's own synthesizer: 24 notes at once on 16 channels. Channel 10 is the drum kit. It returns at once, like <code>play_async()</code>; <code>sound_playing()</code> says when the song is over and <code>sound_stop()</code> stops it. Starting any sound stops the song.</p>
+<p>The songs live in <code>/MIDI</code> on the drive. The synthesizer picks one of its instruments (piano, bell, organ, plucked, bass, strings, brass, reed, flute, lead, pad) from each channel's General MIDI program. It follows note on and off, volume, expression, modulation, the sustain pedal and pitch bend (&plusmn;2 semitones), and ignores the rest.</p>
+<dl>
+<dt>path</dt><dd>See <a href="#paths">paths</a>.</dd>
+<dt>returns</dt><dd>0, or <code>PX_MIDI_NOT_FOUND</code> (&minus;1: no such file), <code>PX_MIDI_NOT_MIDI</code> (&minus;2), <code>PX_MIDI_TOO_BIG</code> (&minus;3) or <code>PX_MIDI_NO_MEMORY</code> (&minus;4).</dd>
+<dt>status</dt><dd>While a song plays: <code>length_ms</code> (to its last event), <code>elapsed_ms</code>, <code>channels</code> (bit <em>n</em> set while a note sounds on channel <em>n</em>+1) and <code>voices</code> (notes sounding). All 0 when no song plays.</dd>
+</dl>
+<pre><code>if (px->midi_play("/MIDI/Canon.mid") == 0) {
+    px_midi_status_t st;
+    while (px->sound_playing() &amp;&amp; px->key(100) != PX_KEY_QUIT) {
+        px->midi_status(&amp;st);
+        /* draw st.elapsed_ms / st.length_ms */
+    }
+    px->sound_stop();
+}</code></pre>
+</div></div>
+
 <!-- ============================================================ -->
 <h2 id="files">10. Files on the drive</h2>
 
@@ -870,6 +889,16 @@ static int digit_of(int k) {
 </ul>
 <p>Run the simulator yourself to try other scripts: <code>build/sim OUT_DIR DRIVE_DIR WORD...</code>.</p>
 
+<h3>The live simulator</h3>
+<p><code>make live</code> (the <em>Simulate live</em> task) runs the same simulator in your browser, at <code>http://127.0.0.1:8042</code>. Only your computer can reach that address. It uses the computer's clock, not a script: the page shows the screen as the app draws it, and you press the keys yourself, by clicking the keypad or typing (digits and <code>. + - * /</code>, <kbd>Enter</kbd>, <kbd>Backspace</kbd>, the arrow keys, <kbd>Space</kbd> for R/S, <kbd>f</kbd> for SHIFT, <kbd>s</kbd> for &Sigma;+, <kbd>x</kbd> for XEQ and <kbd>Esc</kbd> for ON).</p>
+<ul>
+  <li><strong>Restart</strong> rebuilds the app and starts it again with a fresh copy of the drive: edit <code>src/app.c</code>, press Restart, look. A build that fails shows its errors in the console.</li>
+  <li><strong>Record</strong> writes down the keys you press, and the pauses between them, as a <code>SIM_SCRIPT</code> line to paste into the <code>Makefile</code>: play the app by hand once, then run it as a test with <code>make sim</code>.</li>
+  <li><strong>The console</strong> shows what the simulator prints, and the sanitizers' report if the app crashes. The box under it sends text to the app's USB serial port, then Enter.</li>
+  <li><strong>Sounds</strong> play in the page. <code>play()</code> and <code>tone()</code> use the WAV files in the simulated drive's <code>SOUNDS</code> folder (<code>sim/drive/SOUNDS/ON.wav</code>, <code>TONES/TONE0.wav</code> &hellip;), as on the calculator, and the app waits as long as the sound lasts. The browser keeps sound off until you click or press a key on the page once. <code>make sim</code> still only prints them.</li>
+</ul>
+<p>It needs <code>python3</code>, which the simulator needs already. Stop it with Ctrl-C in the terminal.</p>
+
 <div class="note">The simulator isn't the calculator. The 128 KB limit, the stack size, the watchdog and the speed only apply on the calculator. Try every app there before you share it.</div>
 
 <!-- ============================================================ -->
@@ -932,7 +961,7 @@ FAULT core1 PC=20060C41 LR=200608B5 ...</code></pre>
 <!-- ============================================================ -->
 <h2 id="versions">20. Versions</h2>
 
-<p><code>px_app.h</code> has <code>PX_APP_API_VERSION</code>, now 3. Version 2 added the decimal numbers, version 3 <code>on_key()</code>. New firmware only adds functions at the end of the table and raises the number, so:</p>
+<p><code>px_app.h</code> has <code>PX_APP_API_VERSION</code>, now 4. Version 2 added the decimal numbers, version 3 <code>on_key()</code>, version 4 MIDI. New firmware only adds functions at the end of the table and raises the number, so:</p>
 <ul>
   <li>An app keeps working on every later firmware.</li>
   <li>A calculator with older firmware than the app was built for refuses it ("Needs a newer firmware"), rather than calling a function it doesn't have.</li>
@@ -996,6 +1025,9 @@ FAULT core1 PC=20060C41 LR=200608B5 ...</code></pre>
 <tr><td><code>int dec_cmp(a, b)</code>, <code>int dec_class(a)</code></td><td>Compare; finite, infinite or NaN.</td></tr>
 <tr><th colspan="2">Version 3</th></tr>
 <tr><td><code>void on_key(on_is_key)</code></td><td><kbd>ON</kbd> as a key (<code>PX_KEY_ON</code>) instead of ending the app.</td></tr>
+<tr><th colspan="2">Version 4</th></tr>
+<tr><td><code>int midi_play(path)</code></td><td>A MIDI file on the calculator's synthesizer, not waiting.</td></tr>
+<tr><td><code>void midi_status(status)</code></td><td>Length, position, channels and notes sounding.</td></tr>
 <tr><th colspan="2">Return values of <code>app_main()</code></th></tr>
 <tr><td><code>PX_EXIT_MENU</code> (0)</td><td>Back to Settings &rarr; Games &amp; Apps.</td></tr>
 <tr><td><code>PX_EXIT_OFF</code> (1)</td><td>Turn the calculator off.</td></tr>
@@ -1003,7 +1035,7 @@ FAULT core1 PC=20060C41 LR=200608B5 ...</code></pre>
 </table></div>
 
 <footer>
-PX-42F App Manual &middot; framework API version 3 &middot; for PX-42F-Plus firmware with Settings &rarr; Games &amp; Apps.
+PX-42F App Manual &middot; framework API version 4 &middot; for PX-42F-Plus firmware with Settings &rarr; Games &amp; Apps.
 </footer>
 
 </main>

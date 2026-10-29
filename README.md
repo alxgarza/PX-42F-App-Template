@@ -36,6 +36,7 @@ folder and replace `src/app.c` with your own app.
 |---|---|---|
 | Build (⇧⌘B) | `make` | Builds `build/NAME.bin` and prints its size and the RAM left. |
 | Simulate | `make sim` | Runs the app on your computer with the `SIM_SCRIPT` from the `Makefile`. Screenshots are saved in `build/sim-out`. |
+| Simulate live | `make live` | Opens the simulator in your browser: the screen, a keypad you click or type on, and the console. See [The live simulator](#the-live-simulator). |
 | Install on the PX-42F | `make install` | Copies the `.bin` onto the calculator's drive. |
 
 **To install by hand.** On the calculator, open Settings → USB Drive → Connect
@@ -66,6 +67,24 @@ Sounds, serial output and IR transmissions are printed instead of played.
 files your app reads there, at the path they'd have on the calculator.
 `make sim` works on a copy of it, `build/sim-drive`, so whatever the app
 writes stays out of your project.
+
+## The live simulator
+
+`make live` runs the same simulator with the computer's clock, and opens a page
+in your browser (`http://127.0.0.1:8042`, reachable only from this computer).
+It shows the screen as the app draws it. Click the keypad, or type: digits and
+`. + - * /`, Enter, Backspace, the arrow keys, Space for R/S, `f` for SHIFT,
+`s` for Σ+, `x` for XEQ and Esc for ON. The console shows what the app prints,
+and what the sanitizers report if it crashes. The box under it sends text to the
+app's USB serial port.
+
+- **Restart** rebuilds the app and starts it again, with a fresh copy of
+  `sim/drive`. Edit `src/app.c`, press Restart, look.
+- **Record** writes down the keys you press and the pauses between them as a
+  `SIM_SCRIPT` line, to paste into the `Makefile` for `make sim`.
+- **Save screen** saves the screen as `screen.png`.
+- Stop it with Ctrl-C in the terminal.
+- Sounds play in the page: `play()` and `tone()` use the WAV files in the simulated drive's `SOUNDS` folder (`sim/drive/SOUNDS/ON.wav`, `TONES/TONE0.wav` ...), as on the calculator, and wait as long as the sound lasts. The browser keeps sound off until you click or press a key on the page once.
 
 ## Writing an app
 
@@ -98,6 +117,7 @@ int app_main(void) {
 | Serial | `serial_write` `serial_read`. `printf()` also goes to the USB console. |
 | Infrared | `ir_send(burst)` |
 | Power | `battery_mv` `usb_connected`; `on_key` (version 3): ON as a key, for an app that asks before leaving |
+| MIDI (version 4) | `midi_play` plays a `.mid` file on the firmware's synthesizer (24 notes, 16 channels, drums on channel 10), not waiting; `midi_status` gives its length, position and the channels sounding |
 | Decimal numbers (version 2) | `dec` (arithmetic, powers, logarithms, trigonometry, Gamma…), `dec_from_int` `dec_to_int` `dec_from_string` `dec_to_string` `dec_cmp` `dec_class`: Plus42's own 34-digit decimals |
 
 **Keys are named by where they sit.** Row 0 is the top row, column 0 is the
@@ -141,7 +161,7 @@ saves something there.
 | `px42f/runtime.c` | The `.bin`'s header and entry, `malloc()`'s memory, and `printf()` to the console. |
 | `px42f/app.ld` | Places the app at 0x20060000, where the calculator loads it. |
 | `px42f/pxbin.py` | Turns the linked app into the `.bin`: size and checksum. |
-| `sim/` | The simulator: `sim.c`, the calculator's fonts and PNG writer, and `drive/`. |
+| `sim/` | The simulator: `sim.c`, the calculator's fonts and PNG writer, `live.py` and `live.html` (the live simulator), and `drive/`. |
 | `tools/sync_framework.sh` | Copies `px_app.h` (from the firmware) and `px42f/`, `sim/` into every app project next to this one, so they never differ. `--check` only reports. Run it after changing the framework. |
 | `tools/make_manual.py` | Builds `framework_manual.html` from `tools/manual.src.html` and the pictures in `tools/img/`. Edit the source, not the HTML. |
 

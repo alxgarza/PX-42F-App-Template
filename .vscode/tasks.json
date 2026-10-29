@@ -16,6 +16,14 @@
             "problemMatcher": "$gcc"
         },
         {
+            "label": "Simulate live",
+            "detail": "Run the app in the browser, with a keypad you can click; stop it with Ctrl-C",
+            "type": "shell",
+            "command": "make live",
+            "isBackground": true,
+            "problemMatcher": []
+        },
+        {
             "label": "Install on the PX-42F",
             "detail": "Copy the .bin to the calculator's drive (USB Drive -> Connect to Computer first)",
             "type": "shell",
