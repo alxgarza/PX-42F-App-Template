@@ -19,6 +19,7 @@
  *   shot:NAME         save what show() last sent as OUT_DIR/NAME.png
  *   serial:TEXT       TEXT arrives on the serial port, then Enter (a CR);
  *                     "_" in it stands for a space
+ *   type:TEXT         the same, with no Enter after it: keys typed one by one
  * Time is virtual: it moves on through the pauses, and by 1 ms each time
  * the app asks for it (millis()) -- an app that computes without waiting
  * still sees time pass, and its key checks still come round.
@@ -52,6 +53,7 @@
 #include "pngwrite.h"
 #include "sim_dec.h"
 #include "px.h"
+#include "px_draw.h"
 
 #ifndef SIM_APP_DIR
 #define SIM_APP_DIR "/BIN/APPS/APP"
@@ -157,6 +159,24 @@ static void sim_fill(int x, int y, int w, int h, int black) {
     for (int j = y; j < y + h; j++)
         for (int i = x; i < x + w; i++)
             sim_pixel(i, j, black);
+}
+
+static const px_canvas_t screen_canvas = {screen, PX_SCREEN_W, PX_SCREEN_H, PX_SCREEN_STRIDE};
+
+static void sim_box(int x, int y, int w, int h, int t, int black) {
+    px_draw_box(&screen_canvas, x, y, w, h, t, black);
+}
+
+static void sim_ellipse(int x, int y, int rx, int ry, int t, int black) {
+    px_draw_ellipse(&screen_canvas, x, y, rx, ry, t, black);
+}
+
+static void sim_thick_line(int x0, int y0, int x1, int y1, int t, int black) {
+    px_draw_line(&screen_canvas, x0, y0, x1, y1, t, black);
+}
+
+static void sim_polygon(const px_point_t *points, int n, int t, int black) {
+    px_draw_polygon(&screen_canvas, points, n, t, black);
 }
 
 static void sim_line(int x0, int y0, int x1, int y1, int black) {
@@ -270,10 +290,11 @@ static uint32_t pass_time(int ms) {
         if (strncmp(w, "shot:", 5) == 0) {
             save_shot(w + 5);
             next_word++;
-        } else if (strncmp(w, "serial:", 7) == 0) {
-            for (const char *s = w + 7; *s && serial_in_len < sizeof(serial_in) - 1; s++)
+        } else if (strncmp(w, "serial:", 7) == 0 || strncmp(w, "type:", 5) == 0) {
+            bool enter = w[0] == 's';
+            for (const char *s = strchr(w, ':') + 1; *s && serial_in_len < sizeof(serial_in) - 1; s++)
                 serial_in[serial_in_len++] = *s == '_' ? ' ' : *s;
-            if (serial_in_len < sizeof(serial_in))
+            if (enter && serial_in_len < sizeof(serial_in))
                 serial_in[serial_in_len++] = '\r';
             next_word++;
             serial_arrived = true;
@@ -407,7 +428,7 @@ static int sim_key(int wait_ms) {
     const char *next = words[next_word];
     if (strcasecmp(next, "ON") != 0 && strcasecmp(next, "QUIT") != 0 && key_by_name(next) < 0) {
         long t;
-        if (!is_time(next, &t) && strncmp(next, "shot:", 5) != 0 && strncmp(next, "serial:", 7) != 0) {
+        if (!is_time(next, &t) && strncmp(next, "shot:", 5) != 0 && strncmp(next, "serial:", 7) != 0 && strncmp(next, "type:", 5) != 0) {
             fprintf(stderr, "%s: not a key, a time, a shot or serial text\n", next);
             exit(2);
         }
@@ -812,6 +833,10 @@ static const px_api_t sim_api = {
         .on_key = sim_on_key,
         .midi_play = sim_midi_play,
         .midi_status = sim_midi_status,
+        .box = sim_box,
+        .ellipse = sim_ellipse,
+        .thick_line = sim_thick_line,
+        .polygon = sim_polygon,
 };
 
 int main(int argc, char **argv) {

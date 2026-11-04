@@ -117,6 +117,7 @@ int app_main(void) {
 | Serial | `serial_write` `serial_read`. `printf()` also goes to the USB console. |
 | Infrared | `ir_send(burst)` |
 | Power | `battery_mv` `usb_connected`; `on_key` (version 3): ON as a key, for an app that asks before leaving |
+| Shapes (version 5) | `box`, `ellipse` (a circle too), `thick_line` and `polygon`, each with a thickness: 0 filled, 1 one pixel, n pixels. The code is in the firmware's flash, so it costs an app no RAM |
 | MIDI (version 4) | `midi_play` plays a `.mid` file on the firmware's synthesizer (24 notes, 16 channels, drums on channel 10), not waiting; `midi_status` gives its length, position and the channels sounding |
 | Decimal numbers (version 2) | `dec` (arithmetic, powers, logarithms, trigonometry, Gamma…), `dec_from_int` `dec_to_int` `dec_from_string` `dec_to_string` `dec_cmp` `dec_class`: Plus42's own 34-digit decimals |
 

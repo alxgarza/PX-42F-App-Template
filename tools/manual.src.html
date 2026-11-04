@@ -124,7 +124,7 @@ footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--rule);
 
 <header class="cover">
 <h1>PX-42F App Manual</h1>
-<p>Writing native games and apps for the PX-42F calculator. Framework API version 4.</p>
+<p>Writing native games and apps for the PX-42F calculator. Framework API version 5.</p>
 </header>
 
 <nav class="toc">
@@ -961,7 +961,7 @@ FAULT core1 PC=20060C41 LR=200608B5 ...</code></pre>
 <!-- ============================================================ -->
 <h2 id="versions">20. Versions</h2>
 
-<p><code>px_app.h</code> has <code>PX_APP_API_VERSION</code>, now 4. Version 2 added the decimal numbers, version 3 <code>on_key()</code>, version 4 MIDI. New firmware only adds functions at the end of the table and raises the number, so:</p>
+<p><code>px_app.h</code> has <code>PX_APP_API_VERSION</code>, now 5. Version 2 added the decimal numbers, version 3 <code>on_key()</code>, version 4 MIDI, version 5 the shapes. New firmware only adds functions at the end of the table and raises the number, so:</p>
 <ul>
   <li>An app keeps working on every later firmware.</li>
   <li>A calculator with older firmware than the app was built for refuses it ("Needs a newer firmware"), rather than calling a function it doesn't have.</li>
@@ -1028,6 +1028,11 @@ FAULT core1 PC=20060C41 LR=200608B5 ...</code></pre>
 <tr><th colspan="2">Version 4</th></tr>
 <tr><td><code>int midi_play(path)</code></td><td>A MIDI file on the calculator's synthesizer, not waiting.</td></tr>
 <tr><td><code>void midi_status(status)</code></td><td>Length, position, channels and notes sounding.</td></tr>
+<tr><th colspan="2">Version 5</th></tr>
+<tr><td><code>void box(x, y, w, h, t, black)</code></td><td>A rectangle. <code>t</code> is the thickness: 0 filled, 1 one pixel, <code>n</code> pixels, growing inward.</td></tr>
+<tr><td><code>void ellipse(x, y, rx, ry, t, black)</code></td><td>An ellipse, or a circle with <code>rx</code> = <code>ry</code>; <code>t</code> as for <code>box</code>.</td></tr>
+<tr><td><code>void thick_line(x0, y0, x1, y1, t, black)</code></td><td>A line <code>t</code> pixels thick, centred, with round ends; 0 counts as 1.</td></tr>
+<tr><td><code>void polygon(points, n, t, black)</code></td><td>Up to <code>PX_POLY_MAX</code> (64) <code>px_point_t</code> corners, closed for you; <code>t</code> 0 filled (even-odd), else edges as <code>thick_line</code>.</td></tr>
 <tr><th colspan="2">Return values of <code>app_main()</code></th></tr>
 <tr><td><code>PX_EXIT_MENU</code> (0)</td><td>Back to Settings &rarr; Games &amp; Apps.</td></tr>
 <tr><td><code>PX_EXIT_OFF</code> (1)</td><td>Turn the calculator off.</td></tr>

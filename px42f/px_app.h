@@ -35,7 +35,7 @@ extern "C" {
  *    from n up, and an older firmware refuses it. */
 
 #define PX_APP_MAGIC       0x50415850u /* "PXAP" */
-#define PX_APP_API_VERSION 4 /* 2: decimal numbers; 3: on_key(); 4: MIDI */
+#define PX_APP_API_VERSION 5 /* 2: decimal numbers; 3: on_key(); 4: MIDI; 5: shapes */
 #define PX_APP_BASE        0x20060000u
 #define PX_APP_RAM         0x20000u /* 128 KB */
 
@@ -70,6 +70,12 @@ typedef struct {
 #define PX_FONT_CHOSEN_SMALL 3
 #define PX_FONT_CHOSEN_LARGE 4
 #define PX_FONT_CHOSEN_MINI  5
+
+/* A corner of polygon(), which takes at most PX_POLY_MAX. */
+#define PX_POLY_MAX 64
+typedef struct {
+    int16_t x, y;
+} px_point_t;
 
 /* ----- keys -----
  * By where they sit, as IR remote files name them: row 0-6 from the top,
@@ -287,6 +293,18 @@ typedef struct px_api {
      * PX_MIDI_*. */
     int (*midi_play)(const char *path);
     void (*midi_status)(px_midi_status_t *status);
+
+    /* ----- version 5: shapes -----
+     * t is the thickness: 0 filled, 1 one pixel, n pixels. box() and
+     * ellipse() grow inward, keeping their outer size; a circle is an
+     * ellipse with rx = ry. A thick line and a polygon's edges are centred
+     * on the line, with round ends and corners; thick_line() takes t 0 as 1.
+     * polygon() closes itself; where it crosses itself, a filled one has
+     * holes. Above 64, t counts as 64 in lines and polygons. */
+    void (*box)(int x, int y, int w, int h, int t, int black);
+    void (*ellipse)(int x, int y, int rx, int ry, int t, int black);
+    void (*thick_line)(int x0, int y0, int x1, int y1, int t, int black);
+    void (*polygon)(const px_point_t *points, int n, int t, int black);
 } px_api_t;
 
 #ifdef __cplusplus

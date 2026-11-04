@@ -4,7 +4,7 @@
 #   tools/sync_framework.sh           copy them into each sibling project
 #   tools/sync_framework.sh --check   only say which differ (exit 1 if any)
 #
-# px_app.h comes from the firmware (../PX-42F-Plus/px_app.h: the original);
+# px_app.h and px_draw.c/.h come from the firmware (../PX-42F-Plus: the originals);
 # px42f/ and sim/ (not sim/drive, which is each app's own) from here.
 # Sibling projects: every ../PX-42F-* folder with a px42f/ folder.
 set -e
@@ -22,6 +22,13 @@ if [ -f "$FIRMWARE" ]; then
         status=1
         [ $CHECK = 0 ] && cp "$FIRMWARE" px42f/px_app.h
     fi
+    for draw in px_draw.c px_draw.h; do
+        if ! cmp -s "../PX-42F-Plus/$draw" "sim/$draw"; then
+            echo "differs: sim/$draw (the firmware's is newer or changed)"
+            status=1
+            [ $CHECK = 0 ] && cp "../PX-42F-Plus/$draw" "sim/$draw"
+        fi
+    done
 else
     echo "no firmware project at $FIRMWARE: px_app.h not checked against it"
 fi
